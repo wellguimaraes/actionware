@@ -31,6 +31,7 @@ export function createAction(action = () => {}) {
   };
 
   smartAction.toString = () => smartActionName;
+  smartAction.success  = smartActionName;
   smartAction.error    = smartActionError;
   smartAction.loading  = smartActionLoading;
 
