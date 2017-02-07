@@ -16,52 +16,50 @@ export function addLoadingListener(fn) {
   loadingListeners.push(fn);
 }
 
-export function createAction(actionName, action = () => {}, onError = () => {}) {
+export function createAction(actionName, action, onError) {
 
-  const randomKey       = Math.random().toString(36).replace('0.', '');
-  const successEventKey = prefix + randomKey;
-  const errorEventKey   = `${successEventKey}_error`;
-  const loadingEventKey = `${successEventKey}_loading`;
+  const successEvent = prefix + Math.random().toString(36).replace('0.', '');
+  const errorEvent   = `${successEvent}_error`;
+  const loadingEvent = `${successEvent}_loading`;
 
   const smartAction = function() {
     const args = arguments;
 
     return dispatch => {
+
+      const handleError = (error) => {
+        onError && onError({ actionName, args, error });
+        errorListeners.forEach(fn => fn({ actionName, args, error }));
+        dispatch({
+          type   : errorEvent,
+          payload: { error, actionName }
+        });
+      };
+
       try {
         loadingListeners.forEach(fn => fn({ actionName, args }));
-        dispatch({ type: loadingEventKey, payload: true });
+        dispatch({ type: loadingEvent, payload: true });
 
-        const actionResponse  = action.apply(null, [ ...args, dispatch ]);
-        const responsePromise = actionResponse instanceof Promise
-          ? actionResponse
-          : Promise.resolve(actionResponse);
+        const actionResponse  = action && action.apply(null, [ ...args, dispatch ]);
+        const responsePromise = Promise.resolve(actionResponse);
 
         return responsePromise.then(
           (payload) => {
-            dispatch({ type: successEventKey, payload });
+            dispatch({ type: successEvent, payload });
             successListeners.forEach(fn => fn({ actionName, args, payload }));
           },
-          (error) => {
-            onError({ actionName, args, error });
-            errorListeners.forEach(fn => fn({ actionName, args, error }));
-            dispatch({
-              type   : errorEventKey,
-              payload: { error, actionName }
-            });
-          }
+          handleError
         );
       } catch (error) {
-        onError({ actionName, args, error });
-        errorListeners.forEach(fn => fn({ actionName, args, error }));
-        dispatch({ type: errorEventKey, payload: { error, actionName } });
+        handleError(error);
       }
+
     };
   };
 
-  smartAction.toString = () => successEventKey;
-  smartAction.success  = successEventKey;
-  smartAction.error    = errorEventKey;
-  smartAction.loading  = loadingEventKey;
+  smartAction.success = successEvent;
+  smartAction.error   = errorEvent;
+  smartAction.loading = loadingEvent;
 
   return smartAction;
 }
