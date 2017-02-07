@@ -1,45 +1,72 @@
 const prefix = 'actionware:';
 
-export function createAction(action = () => {}) {
+const successListeners = [];
+const errorListeners   = [];
+const loadingListeners = [];
 
-  const randomName         = Math.random().toString(36).replace('0.', '');
-  const smartActionName    = prefix + randomName;
-  const smartActionError   = `${smartActionName}_error`;
-  const smartActionLoading = `${smartActionName}_loading`;
+export function addSuccessListener(fn) {
+  successListeners.push(fn);
+}
+
+export function addErrorListener(fn) {
+  errorListeners.push(fn);
+}
+
+export function addLoadingListener(fn) {
+  loadingListeners.push(fn);
+}
+
+export function createAction(actionName, action = () => {}, onError = () => {}) {
+
+  const randomKey       = Math.random().toString(36).replace('0.', '');
+  const successEventKey = prefix + randomKey;
+  const errorEventKey   = `${successEventKey}_error`;
+  const loadingEventKey = `${successEventKey}_loading`;
 
   const smartAction = function() {
     const args = arguments;
 
     return dispatch => {
       try {
-        dispatch({ type: smartActionLoading, payload: true });
+        loadingListeners.forEach(fn => fn({ actionName, args }));
+        dispatch({ type: loadingEventKey, payload: true });
 
         const actionResponse  = action.apply(null, [ ...args, dispatch ]);
         const responsePromise = actionResponse instanceof Promise
           ? actionResponse
           : Promise.resolve(actionResponse);
 
-        responsePromise.then(
-          (payload) => dispatch({ type: smartActionName, payload }),
-          (err) => dispatch({ type: smartActionError, payload: err })
+        return responsePromise.then(
+          (payload) => {
+            dispatch({ type: successEventKey, payload });
+            successListeners.forEach(fn => fn({ actionName, args, payload }));
+          },
+          (error) => {
+            onError({ actionName, args, error });
+            errorListeners.forEach(fn => fn({ actionName, args, error }));
+            dispatch({
+              type   : errorEventKey,
+              payload: { error, actionName }
+            });
+          }
         );
-
-      } catch (err) {
-        dispatch({ type: smartActionError, payload: err });
+      } catch (error) {
+        onError({ actionName, args, error });
+        errorListeners.forEach(fn => fn({ actionName, args, error }));
+        dispatch({ type: errorEventKey, payload: { error, actionName } });
       }
     };
   };
 
-  smartAction.toString = () => smartActionName;
-  smartAction.success  = smartActionName;
-  smartAction.error    = smartActionError;
-  smartAction.loading  = smartActionLoading;
+  smartAction.toString = () => successEventKey;
+  smartAction.success  = successEventKey;
+  smartAction.error    = errorEventKey;
+  smartAction.loading  = loadingEventKey;
 
   return smartAction;
 }
 
 export function actionwareReducer(state = {}, { type, payload }) {
-
   if (type.indexOf(prefix) == -1)
     return state;
 
@@ -49,7 +76,7 @@ export function actionwareReducer(state = {}, { type, payload }) {
     case 'error':
       return {
         ...state,
-        [actionName + '_error']  : payload,
+        [actionName + '_error']  : payload.error,
         [actionName + '_loading']: false
       };
 
@@ -67,11 +94,4 @@ export function actionwareReducer(state = {}, { type, payload }) {
         [actionName + '_loading']: false
       };
   }
-}
-
-export function createReducer(initialState, handlers) {
-  return (state = initialState, action) =>
-    handlers.hasOwnProperty(action.type)
-      ? handlers[ action.type ](state, action)
-      : state;
 }
