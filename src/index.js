@@ -57,9 +57,10 @@ export function createAction(actionName, action, onError) {
     };
   };
 
-  smartAction.success = successEvent;
-  smartAction.error   = errorEvent;
-  smartAction.loading = loadingEvent;
+  smartAction.toString = () => successEvent;
+  smartAction.success  = successEvent;
+  smartAction.error    = errorEvent;
+  smartAction.loading  = loadingEvent;
 
   return smartAction;
 }
