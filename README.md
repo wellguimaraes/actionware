@@ -10,13 +10,15 @@ import { createAction } from 'actionware';
 export const loadUsers = createAction(
   'loadUsers', // this name is optional
   
-  // dispatch is always available as the last argument,
-  // in case you need it
+  // if you need, dispatch fn is available as the last arg
   async (arg1, ..., argN, dispatch) => {
+  
     // call the api and do something...
     // you can throw exceptions and actionware will handle them
   
-    return users; // whatever you return, will be the action payload
+    // whatever you return, will be the action payload
+    return users;
+    
   }
 )
 ```
