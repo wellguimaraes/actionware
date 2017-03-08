@@ -8,7 +8,7 @@ Actionware is intended to be used with Redux and Redux-Thunk.
 
 # Use it
 
-##### Action creators:
+##### Action creators (with async/await syntax):
 ```js
 import { createAction } from 'actionware';
 
@@ -24,6 +24,32 @@ export const loadUsers = createAction(
     // whatever you return, will be the action payload
     return users;
     
+  },
+  
+  // optional error handler
+  ({ args, error }) => {
+    // ...
+  }
+)
+```
+
+##### Action creators (with Promises):
+```js
+import { createAction } from 'actionware';
+
+export const loadUsers = createAction(
+  'optionalActionName',
+  
+  // dispatch fn is available if you need it
+  (arg1, argN, dispatch) => {
+    
+    // whatever you return in the Promise, 
+    // will be the action payload
+    return fetch('/my/api/users')
+      .then(response => {
+        const users = response.json();
+        return users;
+      });
   },
   
   // optional error handler
