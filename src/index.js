@@ -74,7 +74,11 @@ export function createAction() {
   smartAction.success  = successEvent;
   smartAction.error    = errorEvent;
   smartAction.loading  = loadingEvent;
-  smartAction.name     = customName || actionName;
+
+  Object.defineProperty(smartAction, 'name', {
+    value   : customName || actionName,
+    writable: false
+  });
 
   return smartAction;
 }
