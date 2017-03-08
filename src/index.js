@@ -25,10 +25,10 @@ export function createAction() {
   else
     [ action, onError ] = arguments;
 
-  const actionName   = prefix + Math.random().toString(36).replace('0.', '');
-  const successEvent = actionName;
-  const errorEvent   = `${successEvent}_error`;
-  const loadingEvent = `${successEvent}_loading`;
+  const generatedName = prefix + Math.random().toString(36).replace('0.', '');
+  const successAction = generatedName;
+  const errorAction   = `${successAction}_error`;
+  const loadingAction = `${successAction}_loading`;
 
   const smartAction = function() {
     const args = arguments;
@@ -36,29 +36,31 @@ export function createAction() {
     return dispatch => {
 
       const handleError = (error) => {
-        onError && onError({ args, error });
+        // call action error handler if available
+        if (onError) onError({ args, error });
 
+        // call global error listeners
         errorListeners.forEach(fn => fn({ action: smartAction, args, error }));
-        dispatch({
-          type   : errorEvent,
-          payload: error
-        });
+
+        // dispatch error action
+        dispatch({ type: errorAction, payload: error });
       };
 
       try {
+        // call global loading listeners
         loadingListeners.forEach(fn => fn({ action: smartAction, args }));
 
-        dispatch({
-          type   : loadingEvent,
-          payload: true
-        });
+        dispatch({ type: loadingAction, payload: true });
 
         const actionResponse  = action && action.apply(null, [ ...args, dispatch ]);
         const responsePromise = Promise.resolve(actionResponse);
 
         return responsePromise.then(
           (payload) => {
-            dispatch({ type: successEvent, payload });
+            // dispatch success actions
+            dispatch({ type: successAction, payload });
+
+            // call global success listeners
             successListeners.forEach(fn => fn({ action: smartAction, args, payload }));
           },
           handleError
@@ -70,13 +72,14 @@ export function createAction() {
     };
   };
 
-  smartAction.toString = () => successEvent;
-  smartAction.success  = successEvent;
-  smartAction.error    = errorEvent;
-  smartAction.loading  = loadingEvent;
+  // override action.toString() to return succession action type
+  smartAction.toString = () => successAction;
+  smartAction.success  = successAction;
+  smartAction.error    = errorAction;
+  smartAction.loading  = loadingAction;
 
   Object.defineProperty(smartAction, 'name', {
-    value   : customName || actionName,
+    value   : customName || generatedName,
     writable: false
   });
 
@@ -87,28 +90,28 @@ export function actionwareReducer(state = {}, { type, payload }) {
   if (type.indexOf(prefix) == -1)
     return state;
 
-  const [ actionName, actionType ] = type.split('_');
+  const [ generatedName, eventType ] = type.split('_');
 
-  switch (actionType) {
+  switch (eventType) {
     case 'error':
       return {
         ...state,
-        [actionName + '_error']  : payload.error,
-        [actionName + '_loading']: false
+        [generatedName + '_error']  : payload.error,
+        [generatedName + '_loading']: false
       };
 
     case 'loading':
       return {
         ...state,
-        [actionName + '_error']  : false,
-        [actionName + '_loading']: true
+        [generatedName + '_error']  : false,
+        [generatedName + '_loading']: true
       };
 
     default:
       return {
         ...state,
-        [actionName + '_error']  : false,
-        [actionName + '_loading']: false
+        [generatedName + '_error']  : false,
+        [generatedName + '_loading']: false
       };
   }
 }
