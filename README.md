@@ -3,6 +3,9 @@ Less boilerplate with Redux:
 - get rid of strings to identify actions
 - loading and error states for every action with no extra code.
 
+#### Requirements
+Actionware is intended to be used with Redux and Redux-Thunk.
+
 # Use it
 
 ##### Action creators:
