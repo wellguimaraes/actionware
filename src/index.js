@@ -18,6 +18,7 @@ export function addLoadingListener(fn) {
 
 export function createAction() {
 
+  // Process args
   let customName, action, onError;
 
   if (typeof arguments[ 0 ] === 'string')
@@ -25,10 +26,23 @@ export function createAction() {
   else
     [ action, onError ] = arguments;
 
+
+  // Validate args
+  if (typeof action !== 'function')
+    throw new Error('Action must be a function');
+
+  if (customName && typeof action !== 'string')
+    throw new Error('ActionName must be a string');
+
+  if (onError && typeof onError !== 'function')
+    throw new Error('ErrorHandler must be a function');
+
+
   const generatedName = prefix + Math.random().toString(36).replace('0.', '');
   const successAction = generatedName;
   const errorAction   = `${successAction}_error`;
   const loadingAction = `${successAction}_loading`;
+
 
   const smartAction = function() {
     const args = arguments;
@@ -68,7 +82,6 @@ export function createAction() {
       } catch (error) {
         handleError(error);
       }
-
     };
   };
 
