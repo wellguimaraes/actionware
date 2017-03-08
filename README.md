@@ -24,7 +24,7 @@ export const loadUsers = createAction(
   },
   
   // optional error handler
-  ({ actionName, args, error }) => {
+  ({ args, error }) => {
     // ...
   }
 )

@@ -36,7 +36,7 @@ export function createAction() {
     return dispatch => {
 
       const handleError = (error) => {
-        onError && onError({ action: smartAction, args, error });
+        onError && onError({ args, error });
 
         errorListeners.forEach(fn => fn({ action: smartAction, args, error }));
         dispatch({
