@@ -115,6 +115,7 @@ export default combineReducers({
 ```js
 import { loadUsers } from 'path/to/actionCreators';
 
+// whenever you need some action loading/error states, just map them
 function mapStateToProps(state) {
   return {
     loading: state.actionware[loadUsers.loading],
