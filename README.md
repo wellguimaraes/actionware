@@ -89,7 +89,7 @@ function mapStateToProps(state) {
 }
 ```
 
-##### You can add event listeners 
+##### Add event listeners:
 ```js
 import { 
   addSuccessListener, 
