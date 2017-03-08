@@ -13,8 +13,11 @@ Actionware is intended to be used with __Redux__ and __Redux-Thunk__.
   - **errorHandler**: function({ args, error }) *(optional)*
   
 - `createReducer(initialState: any, reducers: object)`
+
 - `addSuccessListener(listener: function({ action, args, payload }))`
+
 - `addErrorListener(listener: function({ action, args, payload }))`
+
 - `addLoadingListener(listener: function({ action, args, payload }))`
 
 # Use it
