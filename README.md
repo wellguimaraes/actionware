@@ -7,8 +7,12 @@ Less boilerplate with Redux:
 Actionware is intended to be used with __Redux__ and __Redux-Thunk__.
 
 # API
-- `createAction([actionName: string], action: function(...args, dispatch), [errorHandler: function({args, error})])`
-- `createReducers(initialState: any, reducers: object)`
+- `createAction`
+  - Arguments:
+    1. _actionName_: string **(optional)**
+    2. _action_: function(...args, dispatch)
+    3. _errorHandler_: function({ args, error }) **(optional)**
+- `createReducer(initialState: any, reducers: object)`
 - `addSuccessListener(listener: function({ action, args, payload }))`
 - `addErrorListener(listener: function({ action, args, payload }))`
 - `addLoadingListener(listener: function({ action, args, payload }))`
