@@ -52,10 +52,7 @@ export const loadUsers = createAction(
 import { createAction } from 'actionware';
 
 export const loadUsers = createAction(
-  'optionalActionName',
-  
-  // dispatch fn is available if you need it
-  (arg1, argN, dispatch) => {
+    (arg1, argN, dispatch) => {
     
     // whatever you return in the Promise, 
     // will be the action payload
@@ -64,11 +61,6 @@ export const loadUsers = createAction(
         const users = response.json();
         return users;
       });
-  },
-  
-  // optional error handler
-  ({ args, error }) => {
-    // ...
   }
 )
 ```
