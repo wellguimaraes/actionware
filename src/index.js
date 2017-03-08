@@ -18,14 +18,15 @@ export function addLoadingListener(fn) {
 
 export function createAction() {
 
-  let actionName, action, onError;
+  let customName, action, onError;
 
   if (typeof arguments[ 0 ] === 'string')
-    [ actionName, action, onError ] = arguments;
+    [ customName, action, onError ] = arguments;
   else
     [ action, onError ] = arguments;
 
-  const successEvent = prefix + Math.random().toString(36).replace('0.', '');
+  const actionName   = prefix + Math.random().toString(36).replace('0.', '');
+  const successEvent = actionName;
   const errorEvent   = `${successEvent}_error`;
   const loadingEvent = `${successEvent}_loading`;
 
@@ -35,17 +36,22 @@ export function createAction() {
     return dispatch => {
 
       const handleError = (error) => {
-        onError && onError({ actionName, args, error });
-        errorListeners.forEach(fn => fn({ actionName, args, error }));
+        onError && onError({ action: smartAction, args, error });
+
+        errorListeners.forEach(fn => fn({ action: smartAction, args, error }));
         dispatch({
           type   : errorEvent,
-          payload: { error, actionName }
+          payload: error
         });
       };
 
       try {
-        loadingListeners.forEach(fn => fn({ actionName, args }));
-        dispatch({ type: loadingEvent, payload: true });
+        loadingListeners.forEach(fn => fn({ action: smartAction, args }));
+
+        dispatch({
+          type   : loadingEvent,
+          payload: true
+        });
 
         const actionResponse  = action && action.apply(null, [ ...args, dispatch ]);
         const responsePromise = Promise.resolve(actionResponse);
@@ -53,7 +59,7 @@ export function createAction() {
         return responsePromise.then(
           (payload) => {
             dispatch({ type: successEvent, payload });
-            successListeners.forEach(fn => fn({ actionName, args, payload }));
+            successListeners.forEach(fn => fn({ action: smartAction, args, payload }));
           },
           handleError
         );
@@ -68,6 +74,7 @@ export function createAction() {
   smartAction.success  = successEvent;
   smartAction.error    = errorEvent;
   smartAction.loading  = loadingEvent;
+  smartAction.name     = customName || actionName;
 
   return smartAction;
 }

@@ -99,16 +99,15 @@ import {
 
 // Here's where the optional action name may be useful
 
-addSuccessListener(({ actionName, args, payload }) => {
-  // ...
+addSuccessListener(({ action, args, payload }) => {
+  console.log(action.name);
 });
 
-addErrorListener(({ actionName, args, error }) => {
-  // ...
+addErrorListener(({ action, args, error }) => {
+  console.log(action.name);
 });
 
-addLoadingListener(({ actionName, args }) => {
-  // ...
+addLoadingListener(({ action, args }) => {
+  console.log(action.name);
 });
-
 ```
