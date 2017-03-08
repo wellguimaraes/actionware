@@ -113,7 +113,7 @@ export function actionwareReducer(state = {}, { type, payload }) {
   }
 }
 
-export function createReducer(initialState = {}, handlers) {
+export function createReducer(initialState, handlers) {
   return function(state = initialState, { type, payload }) {
     return handlers.hasOwnProperty(type)
       ? handlers[ type ](state, payload)
