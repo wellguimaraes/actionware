@@ -8,9 +8,10 @@ Actionware is intended to be used with __Redux__ and __Redux-Thunk__.
 
 # API
 - `createAction([actionName], action, [errorHandler])`
-  1. **actionName**: string *(optional)*
-  2. **action**: function(...args, dispatch)
-  3. **errorHandler**: function({ args, error }) *(optional)*
+  - **actionName**: string *(optional)*
+  - **action**: function(...args, dispatch)
+  - **errorHandler**: function({ args, error }) *(optional)*
+  
 - `createReducer(initialState: any, reducers: object)`
 - `addSuccessListener(listener: function({ action, args, payload }))`
 - `addErrorListener(listener: function({ action, args, payload }))`
