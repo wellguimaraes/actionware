@@ -4,7 +4,14 @@ Less boilerplate with Redux:
 - loading and error states for every action with no extra code.
 
 #### Requirements
-Actionware is intended to be used with Redux and Redux-Thunk.
+Actionware is intended to be used with __Redux__ and __Redux-Thunk__.
+
+# API
+- `createAction([actionName: string], action: function(...args, dispatch), [errorHandler: function({args, error})])`
+- `createReducers(initialState: any, reducers: object)`
+- `addSuccessListener(listener: function({ action, args, payload }))`
+- `addErrorListener(listener: function({ action, args, payload }))`
+- `addLoadingListener(listener: function({ action, args, payload }))`
 
 # Use it
 
