@@ -7,9 +7,9 @@ Less boilerplate with Redux:
 Actionware is intended to be used with __Redux__ and __Redux-Thunk__.
 
 # API
-- `createAction([actionName], action, [errorHandler])`
+- `createAction([actionName], [action], [errorHandler])`
   - **actionName**: string *(optional)*
-  - **action**: function(...args, dispatch)
+  - **action**: function(...args, dispatch) *(optional)*
   - **errorHandler**: function({ args, error }) *(optional)*
   
 - `createReducer(initialState: any, reducers: object)`
@@ -26,6 +26,10 @@ Actionware is intended to be used with __Redux__ and __Redux-Thunk__.
 ```js
 import { createAction } from 'actionware';
 
+// Dumb action creator
+export const incrementCounter = createAction();
+
+// Async action creator
 export const loadUsers = createAction(
   'optionalActionName',
   
@@ -67,11 +71,18 @@ export const loadUsers = createAction(
 ##### Reducers:
 ```js
 import { createReducer } from 'actionware';
-import { loadUsers }     from 'path/to/actionCreators';
+import { loadUsers, incrementCounter } from 'path/to/actionCreators';
 
-const initialState = { users: [] };
+const initialState = { users: [], count: 0 };
 
 export default createReducer(initialState, {
+  [incrementCounter] (state) {
+    return { 
+      ...state, 
+      count: state.count++ 
+    };  
+  },
+  
   [loadUsers] (state, payload) {
     return { 
       ...state,

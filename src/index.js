@@ -28,11 +28,8 @@ export function createAction() {
 
 
   // Validate args
-  if (typeof action !== 'function')
+  if (action && typeof action !== 'function')
     throw new Error('Action must be a function');
-
-  if (customName && typeof action !== 'string')
-    throw new Error('ActionName must be a string');
 
   if (onError && typeof onError !== 'function')
     throw new Error('ErrorHandler must be a function');
@@ -62,9 +59,12 @@ export function createAction() {
 
       try {
         // call global loading listeners
-        loadingListeners.forEach(fn => fn({ action: smartAction, args }));
+        if (action)
+          loadingListeners.forEach(fn => fn({ action: smartAction, args }));
 
-        dispatch({ type: loadingAction, payload: true });
+        // dispatch loading action
+        if (action)
+          dispatch({ type: loadingAction, payload: true });
 
         const actionResponse  = action && action.apply(null, [ ...args, dispatch ]);
         const responsePromise = Promise.resolve(actionResponse);
