@@ -16,7 +16,14 @@ export function addLoadingListener(fn) {
   loadingListeners.push(fn);
 }
 
-export function createAction(actionName, action, onError) {
+export function createAction() {
+
+  let actionName, action, onError;
+
+  if (typeof arguments[ 0 ] === 'string')
+    [ actionName, action, onError ] = arguments;
+  else
+    [ action, onError ] = arguments;
 
   const successEvent = prefix + Math.random().toString(36).replace('0.', '');
   const errorEvent   = `${successEvent}_error`;
@@ -92,5 +99,13 @@ export function actionwareReducer(state = {}, { type, payload }) {
         [actionName + '_error']  : false,
         [actionName + '_loading']: false
       };
+  }
+}
+
+export function createReducer(initialState = {}, handlers) {
+  return function(state = initialState, { type, payload }) {
+    return handlers.hasOwnProperty(type)
+      ? handlers[ type ](state, payload)
+      : state;
   }
 }
