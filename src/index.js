@@ -85,7 +85,7 @@ export function createAction() {
     };
   };
 
-  // override action.toString() to return succession action type
+  // override action.toString() to return success action type
   smartAction.toString = () => successAction;
   smartAction.success  = successAction;
   smartAction.error    = errorAction;
