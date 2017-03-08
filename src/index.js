@@ -109,7 +109,7 @@ export function actionwareReducer(state = {}, { type, payload }) {
     case 'error':
       return {
         ...state,
-        [generatedName + '_error']  : payload.error,
+        [generatedName + '_error']  : payload,
         [generatedName + '_loading']: false
       };
 
