@@ -1,33 +1,39 @@
 # Actionware
-Less boilerplate with Redux + loading and error states for every action with no extra code.
+Less boilerplate with Redux: 
+- get rid of strings to identify actions
+- loading and error states for every action with no extra code.
 
 # Use it
 
-Action creators:
+##### Action creators:
 ```js
 import { createAction } from 'actionware';
 
 export const loadUsers = createAction(
-  'loadUsers', // this name is optional
+  'optionalActionName',
   
-  // if you need, dispatch fn is available as the last arg
-  async (arg1, ..., argN, dispatch) => {
-  
-    // call the api and do something...
-    // you can throw exceptions and actionware will handle them
-  
+  // dispatch fn is available if you need it
+  async (arg1, argN, dispatch) => {
+    
+    const response = await fetch('/my/api/users');
+    const users    = response.json();
+    
     // whatever you return, will be the action payload
     return users;
     
+  },
+  
+  // optional error handler
+  ({ actionName, args, error }) => {
+    // ...
   }
 )
 ```
 
-
-Reducers:
+##### Reducers:
 ```js
 import { createReducer } from 'actionware';
-import { loadUsers } from 'path/to/actionCreators';
+import { loadUsers }     from 'path/to/actionCreators';
 
 const initialState = { users: [] };
 
@@ -37,15 +43,33 @@ export default createReducer(initialState, {
       ...state,
       users: payload
     };
-  }
+  },
+  
+  // Actionware handle errors and loading statuses,
+  // but if you need to do something else,
+  // the payload here is the error
+  [loadUsers.error] (state, payload) {
+    return {
+      ...state,
+      //...
+    }
+  },
+  
+  // Payload is a boolean indicating if the action is loading
+  [loadUsers.loading] (state, payload) {
+    return {
+      ...state,
+      //...
+    }
+  },
 });
 ```
 
-Add actionware reducer to your root reducer:
+##### Add actionware reducer to your root reducer:
 ```js
-import { combineReducers } from 'redux';
+import { combineReducers }   from 'redux';
 import { actionwareReducer } from 'actionware';
-import userReducer from 'path/to/usersReducer';
+import userReducer           from 'path/to/usersReducer';
 
 export default combineReducers({
   users     : userReducer,
@@ -53,11 +77,9 @@ export default combineReducers({
 });
 ```
 
-Now you have loading and failure statuses for all your actions:
+##### Now you have loading and failure statuses for all your actions:
 ```js
 import { loadUsers } from 'path/to/actionCreators';
-
-// Some React component code...
 
 function mapStateToProps(state) {
   return {
@@ -65,6 +87,28 @@ function mapStateToProps(state) {
     error  : state.actionware[loadUsers.error]
   }
 }
+```
 
-export default connect(mapStateToProps)(SomeContainer);
+##### You can add event listeners 
+```js
+import { 
+  addSuccessListener, 
+  addErrorListener, 
+  addLoadingListener 
+} from 'actionware';
+
+// Here's where the optional action name may be useful
+
+addSuccessListener(({ actionName, args, payload }) => {
+  // ...
+});
+
+addErrorListener(({ actionName, args, error }) => {
+  // ...
+});
+
+addLoadingListener(({ actionName, args }) => {
+  // ...
+});
+
 ```
