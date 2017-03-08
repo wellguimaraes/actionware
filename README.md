@@ -52,7 +52,7 @@ export const loadUsers = createAction(
 import { createAction } from 'actionware';
 
 export const loadUsers = createAction(
-    (arg1, argN, dispatch) => {
+  (arg1, argN, dispatch) => {
     
     // whatever you return in the Promise, 
     // will be the action payload
