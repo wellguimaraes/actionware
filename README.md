@@ -35,7 +35,7 @@ export const loadUsers = createAction(
     const response = await fetch('/my/api/users');
     const users    = response.json();
     
-    // whatever you return, will be the action payload
+    // whatever you return will be the action payload
     return users;
     
   },
@@ -54,8 +54,7 @@ import { createAction } from 'actionware';
 export const loadUsers = createAction(
   (arg1, argN, dispatch) => {
     
-    // whatever you return in the Promise, 
-    // will be the action payload
+    // whatever you return in the Promise will be the action payload
     return fetch('/my/api/users')
       .then(response => {
         const users = response.json();
@@ -80,9 +79,9 @@ export default createReducer(initialState, {
     };
   },
   
-  // Actionware handle errors and loading statuses,
+  // Actionware handles errors and loading statuses,
   // but if you need to do something else,
-  // the payload here is the error
+  // the payload here is the error caught
   [loadUsers.error] (state, payload) {
     return {
       ...state,
