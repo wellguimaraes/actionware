@@ -146,14 +146,14 @@ import {
 // Here's where the optional action name may be useful
 
 addSuccessListener(({ action, args, payload }) => {
-  console.log(action.name);
+  console.log(action.actionName);
 });
 
 addErrorListener(({ action, args, error }) => {
-  console.log(action.name);
+  console.log(action.actionName);
 });
 
 addLoadingListener(({ action, args }) => {
-  console.log(action.name);
+  console.log(action.actionName);
 });
 ```

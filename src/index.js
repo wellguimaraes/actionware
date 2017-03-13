@@ -86,15 +86,11 @@ export function createAction() {
   };
 
   // override action.toString() to return success action type
-  smartAction.toString = () => successAction;
-  smartAction.success  = successAction;
-  smartAction.error    = errorAction;
-  smartAction.loading  = loadingAction;
-
-  Object.defineProperty(smartAction, 'name', {
-    value   : customName || generatedName,
-    writable: false
-  });
+  smartAction.toString   = () => successAction;
+  smartAction.success    = successAction;
+  smartAction.error      = errorAction;
+  smartAction.loading    = loadingAction;
+  smartAction.actionName = customName || generatedName;
 
   return smartAction;
 }
