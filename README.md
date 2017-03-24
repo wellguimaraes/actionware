@@ -33,8 +33,8 @@ export const incrementCounter = createAction();
 export const loadUsers = createAction(
   'optionalActionName',
   
-  // dispatch fn is available if you need it
-  async (arg1, argN, dispatch) => {
+  // dispatch and getState functions are available if you need them
+  async (arg1, argN, dispatch, getState) => {
     
     const response = await fetch('/my/api/users');
     const users    = response.json();
@@ -56,7 +56,7 @@ export const loadUsers = createAction(
 import { createAction } from 'actionware';
 
 export const loadUsers = createAction(
-  (arg1, argN, dispatch) => {
+  (arg1, argN, dispatch, getState) => {
     
     // whatever you return in the Promise will be the action payload
     return fetch('/my/api/users')

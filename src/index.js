@@ -21,18 +21,21 @@ export function createAction() {
   // Process args
   let customName, action, onError;
 
-  if (typeof arguments[ 0 ] === 'string')
+  if (typeof arguments[ 0 ] === 'string') {
     [ customName, action, onError ] = arguments;
-  else
+  } else {
     [ action, onError ] = arguments;
+  }
 
 
   // Validate args
-  if (action && typeof action !== 'function')
+  if (action && typeof action !== 'function') {
     throw new Error('Action must be a function');
+  }
 
-  if (onError && typeof onError !== 'function')
+  if (onError && typeof onError !== 'function') {
     throw new Error('ErrorHandler must be a function');
+  }
 
 
   const generatedName = prefix + Math.random().toString(36).replace('0.', '');
@@ -44,11 +47,13 @@ export function createAction() {
   const smartAction = function() {
     const args = arguments;
 
-    return dispatch => {
+    return (dispatch, getState) => {
 
       const handleError = (error) => {
         // call action error handler if available
-        if (onError) onError({ args, error });
+        if (onError) {
+          onError({ args, error });
+        }
 
         // call global error listeners
         errorListeners.forEach(fn => fn({ action: smartAction, args, error }));
@@ -59,14 +64,16 @@ export function createAction() {
 
       try {
         // call global loading listeners
-        if (action)
+        if (action) {
           loadingListeners.forEach(fn => fn({ action: smartAction, args }));
+        }
 
         // dispatch loading action
-        if (action)
+        if (action) {
           dispatch({ type: loadingAction, payload: true });
+        }
 
-        const actionResponse  = action && action.apply(null, [ ...args, dispatch ]);
+        const actionResponse  = action && action.apply(null, [ ...args, dispatch, getState ]);
         const responsePromise = Promise.resolve(actionResponse);
 
         return responsePromise.then(
@@ -96,8 +103,9 @@ export function createAction() {
 }
 
 export function actionwareReducer(state = {}, { type, payload }) {
-  if (type.indexOf(prefix) == -1)
+  if (type.indexOf(prefix) === -1) {
     return state;
+  }
 
   const [ generatedName, eventType ] = type.split('_');
 
