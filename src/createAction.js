@@ -39,13 +39,17 @@ export default function(actionName, action) {
           dispatch({ type: loadingAction, payload: true });
         }
 
-        const actionResponse  = action && action.apply(null, [ ...args, dispatch, getState ]);
+        const actionResponse  = action && action.apply(action, [ ...args, dispatch, getState ]);
         const responsePromise = Promise.resolve(actionResponse);
 
         return responsePromise.then(
           (payload) => {
             // dispatch success actions
             dispatch({ type: successAction, payload });
+
+            if (typeof action.onSuccess === 'function') {
+              action.onSuccess.apply(null, { payload, args, dispatch });
+            }
 
             // call global success listeners
             successListeners.forEach(fn => fn({ action: smartAction, args, payload }));
