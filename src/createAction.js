@@ -58,7 +58,11 @@ export default function(actionName, action) {
     };
   };
 
-  // override action.toString() to return success action type
+  action.toString = () => successAction;
+  action.success  = successAction;
+  action.error    = errorAction;
+  action.loading  = loadingAction;
+
   smartAction.toString   = () => successAction;
   smartAction.success    = successAction;
   smartAction.error      = errorAction;
