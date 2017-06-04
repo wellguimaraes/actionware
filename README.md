@@ -32,10 +32,10 @@ loadUsers.onError = ({ args, error }) => {
 }
 ```
 
-##### Using react-redux to inject action creators as props:
+##### Injecting action into components as props:
 ```js
-import connect from 'react-redux/lib/components/connect';
-import actionware from 'actionware';
+import { connect } from 'actionware';
+import { loadUsers } from 'myActionsFile';
 
 class MyConnectedComponent extends Component {
   // ...
@@ -45,16 +45,11 @@ const mapStateToProps = (state) => {
   
 }
 
-const actions = actionware({
-  loadUsers,
-});
+const actions = { loadUsers };
 
 export default connect(mapStateToProps, actions)(MyConnectedComponent)
 
 ```
-
-const actions = createActions{}
-
 
 ##### Reducers:
 ```js
