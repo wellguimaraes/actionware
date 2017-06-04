@@ -7,66 +7,54 @@ Less boilerplate with Redux:
 Actionware is intended to be used with __Redux__ and __Redux-Thunk__.
 
 # API
-- `createAction([actionName], [action], [errorHandler])`
-  - **actionName**: string *(optional)*
-  - **action**: function(...args, dispatch) *(optional)*
-  - **errorHandler**: function({ args, error }) *(optional)*
-  
-- `createReducer(initialState: any, reducers: object)`
-
-- `addSuccessListener(listener: function({ action, args, payload }))`
-
-- `addErrorListener(listener: function({ action, args, payload }))`
-
-- `addLoadingListener(listener: function({ action, args, payload }))`
+- **createActions**(actions: object)    
+- **createReducer**(initialState: any, reducers: object)
+- **addSuccessListener**(listener: function({ action, args, payload }))
+- **addErrorListener**(listener: function({ action, args, payload }))
+- **addLoadingListener**(listener: function({ action, args, payload }))
 
 # Use it
 
 ##### Action creators (with async/await syntax):
 ```js
-import { createAction } from 'actionware';
-
-// Dumb action creator
-export const incrementCounter = createAction();
-
-// Async action creator
-export const loadUsers = createAction(
-  'optionalActionName',
+// Functions can return Promises (async)
+export async function loadUsers(arg1, argN, dispatch, getState) {
+  const response = await fetch('/my/api/users');
+  const users    = response.json();
   
-  // dispatch and getState functions are available if you need them
-  async (arg1, argN, dispatch, getState) => {
-    
-    const response = await fetch('/my/api/users');
-    const users    = response.json();
-    
-    // whatever you return will be the action payload
-    return users;
-    
-  },
-  
-  // optional error handler
-  ({ args, error }) => {
-    // ...
-  }
-)
+  // whatever you return will be the action payload
+  return users;    
+};
+
+// Optional error handler
+loadUsers.onError = ({ args, error }) => {
+  console.error(error);
+}
 ```
 
-##### Action creators (with Promises):
+##### Using react-redux to inject action creators as props:
 ```js
-import { createAction } from 'actionware';
+import connect from 'react-redux/lib/components/connect';
+import actionware from 'actionware';
 
-export const loadUsers = createAction(
-  (arg1, argN, dispatch, getState) => {
-    
-    // whatever you return in the Promise will be the action payload
-    return fetch('/my/api/users')
-      .then(response => {
-        const users = response.json();
-        return users;
-      });
-  }
-)
+class MyConnectedComponent extends Component {
+  // ...
+}
+
+const mapStateToProps = (state) => {
+  
+}
+
+const actions = actionware({
+  loadUsers,
+});
+
+export default connect(mapStateToProps, actions)(MyConnectedComponent)
+
 ```
+
+const actions = createActions{}
+
 
 ##### Reducers:
 ```js
