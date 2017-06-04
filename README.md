@@ -8,7 +8,7 @@ Actionware is intended to be used with __Redux__ and __Redux-Thunk__.
 
 # API
 - **createActions**(actions: object)    
-- **createReducer**(initialState: any, reducers: object)
+- **createReducer**(initialState: any, reducers: () => object)
 - **addSuccessListener**(listener: function({ action, args, payload }))
 - **addErrorListener**(listener: function({ action, args, payload }))
 - **addLoadingListener**(listener: function({ action, args, payload }))
@@ -63,7 +63,7 @@ import { loadUsers, incrementCounter } from 'path/to/actionCreators';
 
 const initialState = { users: [], count: 0 };
 
-export default createReducer(initialState, {
+export default createReducer(initialState, () => ({
   [incrementCounter] (state) {
     return { 
       ...state, 
@@ -95,7 +95,7 @@ export default createReducer(initialState, {
       //...
     }
   },
-});
+}));
 ```
 
 ##### Add actionware reducer to your root reducer:
