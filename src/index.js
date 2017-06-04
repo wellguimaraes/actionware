@@ -4,5 +4,5 @@ export { addLoadingListener } from './listeners'
 export actionwareReducer from './actionwareReducer';
 export createReducer from './createReducer';
 export createActions from './createActions';
-export connect from './connect'
+export connect from './connect';
 export default from './createActions';
