@@ -1,4 +1,4 @@
-import connect from 'react-redux/lib/connect'
+import connect from 'react-redux/lib/components/connect';
 import createActions from './createActions';
 
 export default function(mapStateToProps, mapDispatchToProps) {

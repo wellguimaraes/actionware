@@ -5,6 +5,9 @@ import { successListeners } from './listeners';
 import { prefix } from './constants';
 
 export default function(actionName, action) {
+  if (action.invoke)
+    return action.invoke;
+
   const generatedName = getActionName(prefix, actionName, action);
   const successAction = generatedName;
   const errorAction   = `${generatedName}_error`;
@@ -66,6 +69,7 @@ export default function(actionName, action) {
   action.success  = successAction;
   action.error    = errorAction;
   action.loading  = loadingAction;
+  action.invoke   = smartAction;
 
   smartAction.toString   = () => successAction;
   smartAction.success    = successAction;
