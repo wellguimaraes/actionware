@@ -51,7 +51,7 @@ export default function(actionName, action) {
             dispatch({ type: successAction, payload });
 
             if (typeof action.onSuccess === 'function') {
-              action.onSuccess.apply(null, { payload, args, dispatch });
+              action.onSuccess.call(null, { payload, args, dispatch });
             }
 
             // call global success listeners
