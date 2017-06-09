@@ -57,10 +57,14 @@ export default function(actionName, action) {
             // call global success listeners
             successListeners.forEach(fn => fn({ action: smartAction, args, payload }));
           },
-          handleError,
+          (error) => {
+            handleError(error);
+            return Promise.reject(error);
+          },
         );
       } catch (error) {
         handleError(error);
+        throw error;
       }
     };
   };
