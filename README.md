@@ -73,7 +73,7 @@ export default createReducer(initialState, [
   incrementCounter, (state) => {
     return { 
       ...state, 
-      count: state.count++ 
+      count: state.count + 1
     };  
   },
   
