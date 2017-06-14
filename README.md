@@ -11,7 +11,7 @@ Less boilerplate with Redux:
 
 # Use it
 
-##### After creating you Redux store and before using actions...
+##### After creating you Redux store and before using actions:
 
 ```js
 import * as actionware from 'actionware';
@@ -21,7 +21,7 @@ import * as actionware from 'actionware';
 actionware.setStore(myAppStore);
 ```
 
-##### Actions
+##### Actions:
 ```js
 // Simple action
 export const incrementCounter = () => {}
@@ -45,7 +45,7 @@ loadUsers.onError = ({ args, error }) => {
 }
 ```
 
-##### Injecting action into components as props:
+##### Injecting actions into components as props:
 ```js
 import { connect } from 'actionware';
 import { loadUsers, incrementCounter } from 'path/to/actions';
