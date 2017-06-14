@@ -52,7 +52,7 @@ loadUsers.onError = ({ args, error }) => {
 }
 
 export async function anotherAction() {
-  // from any action, use call to invoke any other action 
+  // from an action, use call to invoke any other action 
   await call(loadUsers, arg1, arg2, argN);
 }
 ```
@@ -114,13 +114,13 @@ export default createReducer(initialState, [
 
 ##### Add actionware reducer to your root reducer:
 ```js
-import { combineReducers }   from 'redux';
-import { actionwareReducer } from 'actionware';
-import userReducer           from 'path/to/usersReducer';
+import { combineReducers } from 'redux';
+import { actionwareReducer as actionware } from 'actionware';
+import users from 'path/to/usersReducer';
 
-export default combineReducers({
-  users     : userReducer,
-  actionware: actionwareReducer
+const rootReducer = combineReducers({
+  users,
+  actionware
 });
 ```
 
