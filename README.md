@@ -27,9 +27,9 @@ actionware.setStore(myAppStore);
 ```
 
 ##### Actions:
+```js
 import { call } from 'actionware';
 
-```js
 // Simple action
 export const incrementCounter = () => {}
 
