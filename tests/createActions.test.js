@@ -1,31 +1,33 @@
-import { createActions } from '../src/index';
+import createActions from 'createActions';
 
-test('should throw an error when argument is not an object', () => {
-  expect(createActions.bind(null, 1)).toThrow();
-});
+describe('createActions', () => {
+  it('should throw an error when argument is not an object', () => {
+    expect(createActions.bind(null, 1)).to.throw();
+  });
 
-test('should return a new object with actions created for the given keys', () => {
-  let pureActions = {
-    a: () => 1,
-    b: () => 1,
-  };
+  it('should return a new object with actions created for the given keys', () => {
+    let pureActions = {
+      a: () => 1,
+      b: () => 1,
+    };
 
-  const actions = createActions(pureActions);
+    const actions = createActions(pureActions);
 
-  expect(actions).not.toEqual(pureActions);
-  expect(typeof actions).toEqual('object');
-  expect(typeof actions.a).toBe('function');
-  expect(typeof actions.b).toBe('function');
-});
+    expect(actions).not.to.equal(pureActions);
+    expect(typeof actions).to.equal('object');
+    expect(typeof actions.a).to.equal('function');
+    expect(typeof actions.b).to.equal('function');
+  });
 
-test('created actions should have actionName equals to the given key', () => {
-  let pureActions = {
-    a: () => 1,
-    b: () => 1,
-  };
+  it('created actions should have actionName equals to the given key', () => {
+    let pureActions = {
+      a: () => 1,
+      b: () => 1,
+    };
 
-  const actions = createActions(pureActions);
+    const actions = createActions(pureActions);
 
-  expect(actions.a.actionName).toBe('a');
-  expect(actions.b.actionName).toBe('b');
+    expect(actions.a.actionName).to.equal('a');
+    expect(actions.b.actionName).to.equal('b');
+  });
 });
