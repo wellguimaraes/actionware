@@ -8,10 +8,10 @@ import { getStore } from './';
 export default function(action) {
   if (action.hasOwnProperty('_actionware')) return action._actionware;
 
-  const actionName = action.name;
+  const actionName    = action.name;
   const generatedName = getActionName(prefix, actionName, action);
   const successAction = generatedName;
-  const errorAction = `${generatedName}_error`;
+  const errorAction   = `${generatedName}_error`;
   const loadingAction = `${generatedName}_loading`;
 
   const smartAction = function() {
@@ -29,7 +29,7 @@ export default function(action) {
       errorListeners.forEach(fn => fn({ action: smartAction, args, error }));
 
       // dispatch error action
-      dispatch({ type: errorAction, payload: error });
+      dispatch({ type: errorAction, payload: { error, args } });
     };
 
     try {
@@ -40,7 +40,7 @@ export default function(action) {
       // dispatch loading action
       if (action) dispatch({ type: loadingAction, payload: true });
 
-      const actionResponse = action && action.apply(action, [...args, store]);
+      const actionResponse  = action && action.apply(action, [ ...args, store ]);
       const responsePromise = Promise.resolve(actionResponse);
 
       return responsePromise.then(
@@ -67,18 +67,18 @@ export default function(action) {
     }
   };
 
-  action.toString = () => successAction;
-  action.success = successAction;
-  action.error = errorAction;
-  action.loading = loadingAction;
+  action.toString    = () => successAction;
+  action.success     = successAction;
+  action.error       = errorAction;
+  action.loading     = loadingAction;
   action._actionware = smartAction;
 
-  smartAction.toString = () => successAction;
-  smartAction.success = successAction;
-  smartAction.error = errorAction;
-  smartAction.loading = loadingAction;
+  smartAction.toString   = () => successAction;
+  smartAction.success    = successAction;
+  smartAction.error      = errorAction;
+  smartAction.loading    = loadingAction;
   smartAction.actionName = actionName;
-  smartAction.type = 'actionware';
+  smartAction.type       = 'actionware';
 
   return smartAction;
 }

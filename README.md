@@ -96,7 +96,7 @@ export default createReducer(initialState, [
   // Actionware handles errors and loading statuses,
   // but if you need to do something else...
 
-  error(loadUsers), (state, error) => {
+  error(loadUsers), (state, { error, args }) => {
     return {
       ...state,
       //...
