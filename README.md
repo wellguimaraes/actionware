@@ -53,7 +53,7 @@ loadUsers.onError = ({ args, error }) => {
 
 export async function anotherAction() {
   // from any action, use call to invoke any other action 
-  call(loadUsers, arg1, arg2, argN);
+  await call(loadUsers, arg1, arg2, argN);
 }
 ```
 
