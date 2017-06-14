@@ -4,7 +4,10 @@ Less boilerplate with Redux:
 - loading and error states for every action with no extra code.
 
 # API
-- **createReducer**(initialState: any, handlers: [])
+- **createReducer**(initialState: object, handlers: []): function
+- **loading**(action: function): string
+- **error**(action: function): string
+- **connect**(mapStateToProps: func, actions: object): function(wrapperComponent: Component)
 - **addSuccessListener**(listener: function({ action, args, payload }))
 - **addErrorListener**(listener: function({ action, args, payload }))
 - **addLoadingListener**(listener: function({ action, args, payload }))
