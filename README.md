@@ -11,7 +11,7 @@ Less boilerplate with Redux:
 
 # Use it
 
-##### Before using actions, set Actionware global store
+##### After creating you Redux store and before using actions...
 
 ```js
 import * as actionware from 'actionware';
@@ -21,7 +21,7 @@ import * as actionware from 'actionware';
 actionware.setStore(myAppStore);
 ```
 
-##### Action creators (with async/await syntax):
+##### Actions
 ```js
 // Simple action
 export const incrementCounter = () => {}
