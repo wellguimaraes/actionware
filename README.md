@@ -1,5 +1,5 @@
 # Actionware
-Less boilerplate with Redux: 
+Use Redux with less boilerplate:
 - get rid of strings to identify actions
 - loading and error states for every action with no extra code.
 
