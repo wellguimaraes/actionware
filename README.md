@@ -6,6 +6,7 @@ Less boilerplate with Redux:
 # API
 - **setStore**(store: object): void
 - **connect**(mapStateToProps: func, actions: object): function(wrapperComponent: Component)
+- **call**(action: function, ...args)
 - **createReducer**(initialState: object, handlers: []): function
 - **loading**(action: function): string
 - **error**(action: function): string
@@ -26,6 +27,8 @@ actionware.setStore(myAppStore);
 ```
 
 ##### Actions:
+import { call } from 'actionware';
+
 ```js
 // Simple action
 export const incrementCounter = () => {}
@@ -46,6 +49,11 @@ loadUsers.onSuccess = ({ args, payload, store }) => {
 // Optional error handler
 loadUsers.onError = ({ args, error }) => {
   // ...
+}
+
+export async function anotherAction() {
+  // from any action, use call to invoke any other action 
+  call(loadUsers, arg1, arg2, argN);
 }
 ```
 
