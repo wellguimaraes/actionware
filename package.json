@@ -1,6 +1,6 @@
 {
   "name": "actionware",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Use Redux with much less boilerplate and get loading and error states for every action with no extra code.",
   "main": "./lib/index.js",
   "scripts": {
@@ -29,8 +29,10 @@
   "homepage": "https://github.com/wellguimaraes/actionware#readme",
   "peerDependencies": {
     "react": "^15.5.4",
-    "react-redux": "^5.0.5",
     "redux": "^3.0.0"
+  },
+  "dependencies": {
+    "react-redux": "^5.0.5"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -41,7 +43,6 @@
     "chai": "^4.0.2",
     "cross-env": "^5.0.1",
     "enzyme": "^2.8.2",
-    "jest": "^20.0.4",
     "mocha": "^3.4.2",
     "mocha-jsdom": "^1.1.0",
     "react": "^15.6.0",
