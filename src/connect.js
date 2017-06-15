@@ -7,7 +7,10 @@ function getDisplayName(WrappedComponent) {
 }
 
 export default function(mapStateToProps, actions) {
+  if (!actions) return connect(mapStateToProps);
+
   const smartActions = createActions(actions);
+
   return WrappedComponent => {
     const withProps = props =>
       <WrappedComponent {...props} {...smartActions} />;
