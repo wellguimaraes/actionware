@@ -1,6 +1,6 @@
 {
   "name": "actionware",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "description": "Use Redux with much less boilerplate and get loading and error states for every action with no extra code.",
   "main": "./lib/index.js",
   "scripts": {
