@@ -1,4 +1,4 @@
-import createAction from 'createAction';
+import createAction from './createAction';
 
 function getActionType(descriptor) {
   switch (typeof descriptor) {
