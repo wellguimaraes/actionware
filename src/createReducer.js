@@ -39,8 +39,13 @@ export default function(initialState, handlers) {
   }, {});
 
   return function(state = initialState, { type, payload }) {
-    return handlerMap.hasOwnProperty(type)
-      ? handlerMap[ type ](state, payload)
-      : state;
+    if (handlerMap.hasOwnProperty(type)) {
+      let handler = handlerMap[ type ];
+      return payload._actionwareError
+        ? handler.apply(null, [ state, payload.error, ...payload.args ])
+        : handler(state, payload);
+    } else {
+      return state;
+    }
   }
 }

@@ -96,7 +96,7 @@ export default createReducer(initialState, [
   // Actionware handles errors and loading statuses,
   // but if you need to do something else...
 
-  error(loadUsers), (state, { error, args }) => {
+  error(loadUsers), (state, error, ...args) => {
     return {
       ...state,
       //...
@@ -148,15 +148,15 @@ import {
 
 // Here's where the optional action name may be useful
 
-addSuccessListener(({ action, args, payload }) => {
+addSuccessListener((action, payload, ...args) => {
   console.log(action.actionName);
 });
 
-addErrorListener(({ action, args, error }) => {
+addErrorListener((action, error, ...args) => {
   console.log(action.actionName);
 });
 
-addLoadingListener(({ action, args }) => {
+addLoadingListener((action, isLoading, ...args) => {
   console.log(action.actionName);
 });
 ```
