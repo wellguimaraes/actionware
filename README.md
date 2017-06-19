@@ -44,13 +44,14 @@ export async function loadUsers(arg1, arg2, argN, store) { // the last arg is al
   // whatever you return will be the action payload 
   return response.json();   
 }
+```
 
-// Optional success handler
+##### Optional per action success and error handlers:
+```js
 loadUsers.onSuccess = (payload, arg1, arg2, argN, store) => {
   // ...
 }
 
-// Optional error handler
 loadUsers.onError = (error, arg1, arg2, argN) => {
   // ...
 }

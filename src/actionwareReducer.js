@@ -1,5 +1,5 @@
 import { prefix } from './constants';
-import { setActionState } from 'actionState';
+import { setActionState } from './actionState';
 
 export default function(state = {}, { type, payload }) {
   if (type.indexOf(prefix) === -1)
