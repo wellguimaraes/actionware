@@ -31,13 +31,13 @@ import { setStore } from 'actionware';
 setStore(myAppStore);
 ```
 
-##### Actions:
+##### Simple actions:
 ```js
-import { call } from 'actionware';
-
-// Simple action
 export const incrementCounter = () => {}
+```
 
+##### Async actions:
+```js
 // Actions can return Promises (async)
 export async function loadUsers(arg1, arg2, argN, store) { // the last arg is always the store
   const response = await fetch('/my/api/users');
@@ -55,9 +55,14 @@ loadUsers.onSuccess = ({ args, payload, store }) => {
 loadUsers.onError = ({ args, error }) => {
   // ...
 }
+```
+
+##### If you're not inside a component, use call to invoke any action: 
+```js
+import { call } from 'actionware';
 
 export async function anotherAction() {
-  // if you're not inside a component, use call to invoke any action 
+  // ...
   await call(loadUsers, arg1, arg2, argN);
 }
 ```
