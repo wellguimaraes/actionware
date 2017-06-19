@@ -97,8 +97,14 @@ export default createReducer(initialState, [
     };  
   },
   
-  on(loadUsers), (state, users) => {
+  on(loadUsers), 
+  (state, users) => {
     return { ...state, users };
+  },
+  
+  on(anAction, anotherAction),
+  (state, payload) => { 
+    // ...
   },
   
   // Actionware handles errors and loading statuses,
