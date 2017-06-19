@@ -38,7 +38,6 @@ export const incrementCounter = () => {}
 
 ##### Async actions:
 ```js
-// Actions can return Promises (async)
 export async function loadUsers(arg1, arg2, argN, store) { // the last arg is always the store
   const response = await fetch('/my/api/users');
   
@@ -47,12 +46,12 @@ export async function loadUsers(arg1, arg2, argN, store) { // the last arg is al
 }
 
 // Optional success handler
-loadUsers.onSuccess = ({ args, payload, store }) => {
+loadUsers.onSuccess = (payload, arg1, arg2, argN, store) => {
   // ...
 }
 
 // Optional error handler
-loadUsers.onError = ({ args, error }) => {
+loadUsers.onError = (error, arg1, arg2, argN) => {
   // ...
 }
 ```
