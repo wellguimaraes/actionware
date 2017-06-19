@@ -1,9 +1,10 @@
 {
   "name": "actionware",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Use Redux with much less boilerplate and get loading and error states for every action with no extra code.",
   "main": "./lib/index.js",
   "scripts": {
+    "prepublish": "npm run build",
     "test": "cross-env NODE_PATH=./src mocha ./tests/**/**/*.test.js --require before-tests.js --require babel-polyfill --compilers js:babel-register",
     "test:watch": "npm test -- --watch",
     "build": "babel src -d lib"

@@ -17,9 +17,9 @@ Redux with less boilerplate, side-effects under control and action statuses in a
 - **on**(...action: function|string): Array<string>
 - **onError**(action: function): string
 - **onLoading**(action: function): string
-- **addSuccessListener**(listener: function({ action, args, payload }))
-- **addErrorListener**(listener: function({ action, args, payload }))
-- **addLoadingListener**(listener: function({ action, args, payload }))
+- **addSuccessListener**(listener: function(action, payload, ...args))
+- **addErrorListener**(listener: function(action, error, ...args))
+- **addLoadingListener**(listener: function(action, isLoading, ...args))
 
 # Use it
 
