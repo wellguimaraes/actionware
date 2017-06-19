@@ -1,10 +1,11 @@
 import createAction from './createAction';
-export { addSuccessListener } from './listeners'
-export { addErrorListener } from './listeners'
-export { addLoadingListener } from './listeners'
+import { getActionState } from './actionState';
+export { addSuccessListener } from './listeners';
+export { addErrorListener } from './listeners';
+export { addLoadingListener } from './listeners';
 export actionwareReducer from './actionwareReducer';
 export createReducer from './createReducer';
-export connect from './connect';
+export withActions from './withActions';
 export default from './createActions';
 
 let _store = null;
@@ -14,8 +15,7 @@ export function setStore(store) {
 }
 
 export function getStore() {
-  if (_store === null)
-    throw new Error('Store has not been set');
+  if (_store === null) throw new Error('Store has not been set');
 
   return _store;
 }
@@ -30,4 +30,28 @@ export function error(action) {
 
 export function loading(action) {
   return createAction(action).loading;
+}
+
+export function on(...actions) {
+  return actions.map(action =>
+    typeof action === 'string'
+      ? action
+      : createAction(action).success
+  );
+}
+
+export function onLoading(action) {
+  return loading(action);
+}
+
+export function onError(action) {
+  return error(action);
+}
+
+export function isLoading(action) {
+  return getActionState()[ loading(action) ] || false;
+}
+
+export function getError(action) {
+  return getActionState()[ error(action) ] || null;
 }

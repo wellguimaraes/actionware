@@ -1,15 +1,22 @@
 # Actionware
-Use Redux with less boilerplate:
-- get rid of strings to identify actions
-- loading and error states for every action with no extra code.
+Redux with less boilerplate, side-effects under control and action statuses in a single pack:
+- no need to dispatch actions
+- get rid of strings to identify actions types
+- error status for every action with no extra code
+- loading status for every async action (yep, no extra code!)
+
+\* Since it's a little bit confusing to have _action types_, _action creators_ and _actions_, with **Actionware**, you have just "actions" which are actually simple functions.
 
 # API
 - **setStore**(store: object): void
-- **connect**(mapStateToProps: func, actions: object): function(wrapperComponent: Component)
+- **withActions**(actions: object): function(wrapperComponent: Component)
 - **call**(action: function, ...args)
 - **createReducer**(initialState: object, handlers: []): function
-- **loading**(action: function): string
-- **error**(action: function): string
+- **isLoading**(action: function): bool
+- **getError**(action: function): object
+- **on**(...action: function|string): Array<string>
+- **onError**(action: function): string
+- **onLoading**(action: function): string
 - **addSuccessListener**(listener: function({ action, args, payload }))
 - **addErrorListener**(listener: function({ action, args, payload }))
 - **addLoadingListener**(listener: function({ action, args, payload }))
@@ -19,11 +26,9 @@ Use Redux with less boilerplate:
 ##### After creating you Redux store and before using actions:
 
 ```js
-import * as actionware from 'actionware';
+import { setStore } from 'actionware';
 
-// ...
-
-actionware.setStore(myAppStore);
+setStore(myAppStore);
 ```
 
 ##### Actions:
@@ -52,58 +57,58 @@ loadUsers.onError = ({ args, error }) => {
 }
 
 export async function anotherAction() {
-  // from an action, use call to invoke any other action 
+  // if you're not inside a component, use call to invoke any action 
   await call(loadUsers, arg1, arg2, argN);
 }
 ```
 
 ##### Injecting actions into components as props:
 ```js
-import { connect } from 'actionware';
+import { withActions } from 'actionware';
 import { loadUsers, incrementCounter } from 'path/to/actions';
 
 class MyConnectedComponent extends Component {
   // ...
 }
 
-const mapStateToProps = (state) => state;
 const actions = { loadUsers, incrementCounter };
 
-// IMPORTANT: this is not the connect fn from 'react-redux'
-export default connect(mapStateToProps, actions)(MyConnectedComponent);
-
+export default withActions(actions)(MyConnectedComponent);
 ```
 
 ##### Reducers:
 ```js
-import { createReducer, error, loading } from 'actionware';
+import { createReducer, on, onError, onLoading } from 'actionware';
 import { loadUsers, incrementCounter } from 'path/to/actions';
 
 const initialState = { users: [], count: 0 };
 
 export default createReducer(initialState, [
-  incrementCounter, (state) => {
+  on(incrementCounter), 
+  (state) => {
     return { 
       ...state, 
       count: state.count + 1
     };  
   },
   
-  loadUsers, (state, users) => {
+  on(loadUsers), (state, users) => {
     return { ...state, users };
   },
   
   // Actionware handles errors and loading statuses,
   // but if you need to do something else...
 
-  error(loadUsers), (state, error, ...args) => {
+  onError(loadUsers), 
+  (state, error, ...args) => {
     return {
       ...state,
       //...
     }
   },
   
-  loading(loadUsers), (state, isLoading) => {
+  onLoading(loadUsers), 
+  (state, isLoading) => {
     return {
       ...state,
       //...
@@ -126,16 +131,28 @@ const rootReducer = combineReducers({
 
 ##### Now you have loading and failure statuses for all your actions:
 ```js
-import { error, loading } from 'actionware';
+import { connect } from 'react-redux'; 
+import { getError, isLoading, withActions } from 'actionware';
 import { loadUsers } from 'path/to/actions';
 
+class MyComponent extends React.Component {
+  // ...  
+}
+
 // whenever you need some action loading/error states, just map them
-function mapStateToProps({ actionware }) {
+function mapStateToProps(state) {
   return {
-    loading: actionware[loading(loadUsers)],
-    error  : actionware[error(loadUsers)]
+    //...
+    loading: isLoading(loadUsers),
+    error  : getError(loadUsers)
   };
 }
+
+const actions = { loadUsers };
+
+export default connect(mapStateToProps)(
+  withActions(actions)(MyComponent)
+)
 ```
 
 ##### Add global listeners:

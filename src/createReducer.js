@@ -1,51 +1,56 @@
 import createAction from './createAction';
 
-function getActionType(descriptor) {
-  switch (typeof descriptor) {
-    case 'function':
-      if (!descriptor.hasOwnProperty('_actionware'))
-        createAction(descriptor);
+function getTypesArray(types) {
+  return Array.isArray(types) ? types : [ types ];
+}
 
-      return descriptor.success;
-
-    case 'string':
-      return descriptor;
-  }
+function getActionType(types) {
+  return getTypesArray(types).map(
+    it => (typeof it === 'string' ? it : createAction(it).success)
+  );
 }
 
 export default function(initialState, handlers) {
-  if (!initialState)
-    throw new Error('Initial state should be provided');
+  if (!initialState) throw new Error('Initial state should be provided');
 
   if (!handlers || !Array.isArray(handlers))
     throw new Error('Handlers array should be provided');
 
-  let isInvalidHandler = (it, i) => i % 2 === 0
-    ? ![ 'string', 'function' ].includes(typeof it)
-    : typeof it !== 'function';
+  const isValidActionType = actionType => {
+    const types = getTypesArray(actionType);
+    return (
+      types.length &&
+      types.every(it => [ 'string', 'function' ].includes(typeof it))
+    );
+  };
 
-  if (handlers.length < 2 || handlers.some(isInvalidHandler))
+  const isValidHandler = (it, i) =>
+    i % 2 === 0 ? isValidActionType(it) : typeof it === 'function';
+
+  if (
+    handlers.length < 2 ||
+    handlers.length % 2 === 1 ||
+    !handlers.every(isValidHandler)
+  )
     throw new Error('Handlers array is not in the correct format');
 
-  let pendingKey = null;
+  let pendingKeys = null;
 
-  const handlerMap = handlers.reduce((prev, curr, i) => {
-    if (i % 2 === 0)
-      pendingKey = getActionType(curr);
-    else
-      prev[ pendingKey ] = curr;
+  const handlerMap = handlers.reduce((map, curr, i) => {
+    if (i % 2 === 0) pendingKeys = getActionType(curr);
+    else pendingKeys.forEach(key => (map[ key ] = curr));
 
-    return prev;
+    return map;
   }, {});
 
   return function(state = initialState, { type, payload }) {
     if (handlerMap.hasOwnProperty(type)) {
       let handler = handlerMap[ type ];
-      return payload._actionwareError
+      return payload && payload._actionwareError
         ? handler.apply(null, [ state, payload.error, ...payload.args ])
         : handler(state, payload);
     } else {
       return state;
     }
-  }
+  };
 }

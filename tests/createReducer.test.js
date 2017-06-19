@@ -1,4 +1,5 @@
 import createReducer from 'createReducer';
+import { on } from 'index';
 
 describe('createReducer', () => {
   it('should throw an exception if no initial state is provided', () => {
@@ -10,23 +11,25 @@ describe('createReducer', () => {
     expect(createReducer.bind(null, {}, {})).to.throw();
     expect(createReducer.bind(null, {}, [])).to.throw();
     expect(createReducer.bind(null, {}, [ 'a', 'b' ])).to.throw();
-    expect(createReducer.bind(null, {}, [ [], () => {} ])).to.throw();
     expect(createReducer.bind(null, {}, [ 1, () => {} ])).to.throw();
+    expect(createReducer.bind(null, {}, [ [], () => {} ])).to.throw();
+    expect(createReducer.bind(null, {}, [ [ 1 ], () => {} ])).to.throw();
+    expect(createReducer.bind(null, {}, [ 'a', () => {}, 'b' ])).to.throw();
   });
 
   it('should not throw if arguments are in the correct format', () => {
     const loadUserByPk = function() {};
 
     let handlers = [
-      loadUserByPk,
+      on(loadUserByPk),
       (state, ignore) => {
         return state;
       },
 
-      'anotherActionName',
+      on('anotherActionName'),
       (state, ignore) => {
         return state;
-      },
+      }
     ];
 
     expect(createReducer.bind(null, {}, handlers)).not.to.throw();
@@ -36,35 +39,52 @@ describe('createReducer', () => {
     const loadUserByPk = () => {};
 
     const reducer = createReducer({}, [
-      loadUserByPk,
+      on(loadUserByPk),
       (state, ignore) => {
         return state;
       },
 
-      'anotherActionName',
+      on('anotherActionName'),
       (state, ignore) => {
         return state;
-      },
+      }
     ]);
 
     expect(typeof reducer).to.equal('function');
   });
 
-  it('should createAction with a fn descriptor', () => {
+  it('returned function should call proper function based on given action type', () => {
     const loadUserByPk = () => {};
+    const loadAllUsers = () => {};
+    const handler      = spy();
 
     const reducer = createReducer({}, [
-      loadUserByPk,
+      on(loadUserByPk, loadAllUsers), handler
+    ]);
+
+    reducer({}, { type: loadUserByPk.toString() });
+    reducer({}, { type: loadAllUsers.toString() });
+    reducer({}, { type: 'loremIpsumDolor' });
+
+    expect(handler.calledTwice).to.equal(true);
+  });
+
+  it('should createAction with the fn descriptors', () => {
+    const loadUserByPk = () => {};
+    const loadAllUsers = () => {};
+
+    createReducer({}, [
+      on(loadAllUsers, loadUserByPk),
       (state, ignore) => {
         return state;
-      },
+      }
     ]);
 
     expect(loadUserByPk.success).to.equal(loadUserByPk.toString());
+    expect(loadAllUsers.success).to.equal(loadAllUsers.toString());
   });
 
   describe('reducer', () => {
-
     const loadUserByPk = () => {};
 
     const reducer = createReducer({}, [
@@ -76,7 +96,7 @@ describe('createReducer', () => {
       'anotherActionName',
       (state, ignore) => {
         return { ...state, x: 2 };
-      },
+      }
     ]);
 
     const currentState = { x: 0 };

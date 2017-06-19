@@ -1,5 +1,5 @@
 import React from 'react';
-import connect from 'connect';
+import withActions from 'withActions';
 import jsdom from 'mocha-jsdom';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
@@ -12,7 +12,7 @@ const store = mockStore({});
 
 setStore(store);
 
-describe('connect', () => {
+describe('withActions', () => {
   jsdom();
 
   let wrapper;
@@ -32,7 +32,7 @@ describe('connect', () => {
     </div>;
 
   before(() => {
-    const ConnectedComponent = connect(null, actions)(MyComponent);
+    const ConnectedComponent = withActions(actions)(MyComponent);
 
     wrapper = mount(
       <Provider store={store}>
