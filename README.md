@@ -5,7 +5,7 @@ Redux with less boilerplate, side-effects under control and action statuses in a
 - error status for every action with no extra code
 - loading status for every async action (yep, no extra code!)
 
-\* Since it's a little bit confusing to have _action types_, _action creators_ and _actions_, with **Actionware**, you have just "actions" which are actually simple functions.
+\* Since it's a little bit confusing to have _action types_, _action creators_ and _actions_, with **Actionware**, you have just _actions_ which are actually simple named functions.
 
 # API
 - **setStore**(store: object): void
