@@ -62,26 +62,11 @@ describe('createReducer', () => {
       on(loadUserByPk, loadAllUsers), handler
     ]);
 
-    reducer({}, { type: loadUserByPk.toString() });
-    reducer({}, { type: loadAllUsers.toString() });
+    reducer({}, { type: loadUserByPk._trackedAction._successType });
+    reducer({}, { type: loadAllUsers._trackedAction._successType });
     reducer({}, { type: 'loremIpsumDolor' });
 
     expect(handler.calledTwice).to.equal(true);
-  });
-
-  it('should createAction with the fn descriptors', () => {
-    const loadUserByPk = () => {};
-    const loadAllUsers = () => {};
-
-    createReducer({}, [
-      on(loadAllUsers, loadUserByPk),
-      (state, ignore) => {
-        return state;
-      }
-    ]);
-
-    expect(loadUserByPk._successType).to.equal(loadUserByPk.toString());
-    expect(loadAllUsers._successType).to.equal(loadAllUsers.toString());
   });
 
   describe('reducer', () => {
@@ -108,7 +93,7 @@ describe('createReducer', () => {
     });
 
     it('should return a new state according to respective type handler (function)', () => {
-      const newState = reducer(currentState, { type: loadUserByPk.toString() });
+      const newState = reducer(currentState, { type: loadUserByPk._trackedAction._successType });
       expect(newState).not.to.equal(currentState);
       expect(newState.x).to.equal(1);
     });

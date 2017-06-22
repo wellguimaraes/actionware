@@ -1,3 +1,3 @@
-export const prefix = 'actionware:';
-export const errorTypeSuffix = ':error';
-export const loadingTypeSuffix = ':loading';
+export const NAME_PREFIX         = 'actionware:';
+export const ERROR_TYPE_SUFFIX   = ':error';
+export const LOADING_TYPE_SUFFIX = ':loading';

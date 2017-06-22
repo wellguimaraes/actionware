@@ -1,12 +1,14 @@
 import getActionName from './getActionName';
-import { Action, ReduxStore, TrackedAction } from './types';
+import { Action } from './types';
+import { ReduxStore } from './types';
+import { TrackedAction } from './types';
 import { errorListeners } from './listeners';
 import { loadingListeners } from './listeners';
 import { successListeners } from './listeners';
-import { prefix } from './constants';
-import { getStore } from './';
-import { errorTypeSuffix } from './constants';
-import { loadingTypeSuffix } from './constants';
+import { NAME_PREFIX } from './constants';
+import { ERROR_TYPE_SUFFIX } from './constants';
+import { LOADING_TYPE_SUFFIX } from './constants';
+import { getStore } from './storeKeeper';
 
 export default function(action: Action): TrackedAction {
   if (typeof action !== 'function') {
@@ -17,12 +19,10 @@ export default function(action: Action): TrackedAction {
     return action._trackedAction;
   }
 
-  const uniqueName = getActionName(prefix, action.name, action);
-
-  action._successType = uniqueName;
-  action._errorType = uniqueName + errorTypeSuffix;
-  action._loadingType = uniqueName + loadingTypeSuffix;
-  action.toString = () => uniqueName;
+  const uniqueName = getActionName(NAME_PREFIX, action.name, action);
+  const successType = uniqueName;
+  const errorType = uniqueName + ERROR_TYPE_SUFFIX;
+  const loadingType = uniqueName + LOADING_TYPE_SUFFIX;
 
   const trackedAction: TrackedAction = function(...args) {
     let store: ReduxStore = getStore();
@@ -34,8 +34,8 @@ export default function(action: Action): TrackedAction {
 
       errorListeners.forEach(fn => fn.apply(null, [action, error, ...args]));
       store.dispatch({
-        action,
-        type: action._errorType,
+        trackedAction,
+        type: errorType,
         payload: { error, args, actionwareError: true }
       });
     };
@@ -48,7 +48,7 @@ export default function(action: Action): TrackedAction {
 
       if (isAsync) {
         // dispatch loading action
-        store.dispatch({ action, type: action._loadingType, payload: true });
+        store.dispatch({ trackedAction, type: loadingType, payload: true });
         loadingListeners.forEach(fn => fn.apply(null, [action, true, ...args]));
       }
 
@@ -56,7 +56,7 @@ export default function(action: Action): TrackedAction {
       return payloadPromise.then(
         payload => {
           // dispatch success actions
-          store.dispatch({ action, type: action._successType, payload });
+          store.dispatch({ trackedAction, type: successType, payload });
 
           if (typeof action.onSuccess === 'function')
             action.onSuccess.apply(null, [ payload, ...args, store ]);
@@ -76,8 +76,13 @@ export default function(action: Action): TrackedAction {
     }
   };
 
+  // The only change made in the action object
   action._trackedAction = trackedAction;
+
   trackedAction._wrappedAction = action;
+  trackedAction._successType = successType;
+  trackedAction._loadingType = loadingType;
+  trackedAction._errorType = errorType;
 
   return trackedAction;
 }

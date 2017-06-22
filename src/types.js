@@ -2,16 +2,16 @@ export type Action = {
   name: string;
   onError: (error: Error, ...args: any[]) => void;
   onSuccess: (payload: any, ...args: any[]) => void;
-  _trackedAction: TrackedAction;
-  _successType: string;
-  _errorType: string;
-  _loadingType: string;
   apply: Function;
   call: Function;
+  _trackedAction: TrackedAction;
 }
 
 export type TrackedAction = {
-  _wrappedAction: Action
+  _wrappedAction: Action;
+  _successType: string;
+  _errorType: string;
+  _loadingType: string;
 }
 
 export type ReduxAction = {

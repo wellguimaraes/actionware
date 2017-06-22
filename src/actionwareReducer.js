@@ -1,30 +1,30 @@
-import { prefix } from './constants';
+import { NAME_PREFIX } from './constants';
 import { saveState } from './stateKeeper';
-import { errorTypeSuffix } from './constants';
-import { loadingTypeSuffix } from './constants';
+import { ERROR_TYPE_SUFFIX } from './constants';
+import { LOADING_TYPE_SUFFIX } from './constants';
 
-export default function(state = {}, { type, payload, action = null }) {
-  if (type.indexOf(prefix) === -1) return state;
+export default function(state = {}, { type, payload, trackedAction = null }) {
+  if (type.indexOf(NAME_PREFIX) === -1) return state;
 
   let nextState = state;
 
-  if (type.endsWith(errorTypeSuffix))
+  if (type.endsWith(ERROR_TYPE_SUFFIX))
     nextState = {
       ...state,
-      [action._errorType]  : payload,
-      [action._loadingType]: false
+      [trackedAction._errorType]  : payload,
+      [trackedAction._loadingType]: false
     };
-  else if (type.endsWith(loadingTypeSuffix))
+  else if (type.endsWith(LOADING_TYPE_SUFFIX))
     nextState = {
       ...state,
-      [action._errorType]  : false,
-      [action._loadingType]: true
+      [trackedAction._errorType]  : false,
+      [trackedAction._loadingType]: true
     };
   else
     nextState = {
       ...state,
-      [action._errorType]  : false,
-      [action._loadingType]: false
+      [trackedAction._errorType]  : false,
+      [trackedAction._loadingType]: false
     };
 
   saveState(nextState);

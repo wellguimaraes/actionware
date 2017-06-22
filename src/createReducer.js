@@ -7,7 +7,7 @@ function toArrayOfTypes(types) {
 function getActionTypes(types): string[] {
   return toArrayOfTypes(types).map(
     it =>
-      typeof it === 'string' ? it : createAction(it)._wrappedAction._successType
+      typeof it === 'string' ? it : createAction(it)._successType
   );
 }
 
@@ -70,4 +70,21 @@ export default function(initialState: any, handlers: any[]) {
       return state;
     }
   };
+}
+
+export function on(...actions) {
+  return actions.map(
+    action =>
+      typeof action === 'string'
+        ? action
+        : createAction(action)._successType
+  );
+}
+
+export function onLoading(action) {
+  return createAction(action)._loadingType;
+}
+
+export function onError(action) {
+  return createAction(action)._errorType;
 }
