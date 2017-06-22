@@ -175,8 +175,6 @@ export default connect(mapStateToProps)(
 ```js
 import { addSuccessListener, addErrorListener, addLoadingListener } from 'actionware';
 
-// Here's where the optional action name may be useful
-
 addSuccessListener((action, payload, ...args) => {
   console.log(action.name);
 });
