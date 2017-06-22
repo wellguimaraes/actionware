@@ -228,7 +228,6 @@ describe('someReducer', () => {
       });
       
       expect(newState.items).to.equals(loadedItems);
-      expect(newState.items.length).to.have.length(3);
     });  
   });
 });
