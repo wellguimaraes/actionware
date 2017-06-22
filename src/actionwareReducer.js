@@ -1,41 +1,33 @@
 import { prefix } from './constants';
-import { setActionState } from './actionState';
+import { saveState } from './stateKeeper';
+import { errorTypeSuffix } from './constants';
+import { loadingTypeSuffix } from './constants';
 
-export default function(state = {}, { type, payload }) {
-  if (type.indexOf(prefix) === -1)
-    return state;
-
-  const [ generatedName, eventType ] = type.split('_');
+export default function(state = {}, { type, payload, action = null }) {
+  if (type.indexOf(prefix) === -1) return state;
 
   let nextState = state;
 
-  switch (eventType) {
-    case 'error':
-      nextState = {
-        ...state,
-        [generatedName + '_error']  : payload,
-        [generatedName + '_loading']: false
-      };
-      break;
+  if (type.endsWith(errorTypeSuffix))
+    nextState = {
+      ...state,
+      [action._errorType]  : payload,
+      [action._loadingType]: false
+    };
+  else if (type.endsWith(loadingTypeSuffix))
+    nextState = {
+      ...state,
+      [action._errorType]  : false,
+      [action._loadingType]: true
+    };
+  else
+    nextState = {
+      ...state,
+      [action._errorType]  : false,
+      [action._loadingType]: false
+    };
 
-    case 'loading':
-      nextState = {
-        ...state,
-        [generatedName + '_error']  : false,
-        [generatedName + '_loading']: true
-      };
-      break;
-
-    default:
-      nextState = {
-        ...state,
-        [generatedName + '_error']  : false,
-        [generatedName + '_loading']: false
-      };
-      break;
-  }
-
-  setActionState(nextState);
+  saveState(nextState);
 
   return nextState;
 }

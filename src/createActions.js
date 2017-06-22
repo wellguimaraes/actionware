@@ -1,13 +1,13 @@
 import createAction from './createAction';
 
-export default function(actions) {
+export default function(actions: object): object {
   if (typeof actions !== 'object')
-    throw new TypeError('actions argument should be an object');
+    throw new Error('actions argument should be an object');
 
   const createdActions = {};
 
   Object.keys(actions).forEach(actionName => {
-    createdActions[ actionName ] = createAction(actions[ actionName ]);
+    createdActions[actionName] = createAction(actions[actionName]);
   });
 
   return createdActions;

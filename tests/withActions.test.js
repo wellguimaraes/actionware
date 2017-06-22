@@ -8,7 +8,7 @@ import { setStore } from 'index';
 import { call } from 'index';
 
 const mockStore = configureStore([]);
-const store = mockStore({});
+const store     = mockStore({});
 
 setStore(store);
 
@@ -18,11 +18,11 @@ describe('withActions', () => {
   let wrapper;
 
   const actions = {
-    loadUsers: spy(),
+    loadUsers   : spy(),
     loadUserByPk: spy(),
-    login: () => {
+    login       : () => {
       call(actions.loadUserByPk, 1, 2);
-    },
+    }
   };
 
   const MyComponent = ({ loadUsers, login }) =>
@@ -37,27 +37,27 @@ describe('withActions', () => {
     wrapper = mount(
       <Provider store={store}>
         <ConnectedComponent />
-      </Provider>,
+      </Provider>
     );
   });
 
   it('should pass actions to wrapped component', () => {
     let mountedProps = wrapper.find(MyComponent).props();
     expect(typeof mountedProps.loadUsers).to.equal('function');
-    expect(mountedProps.loadUsers.type).to.equal('actionware');
+    expect(mountedProps.loadUsers._wrappedAction).to.equal(actions.loadUsers);
   });
 
   it('should call action fn with store as last arg', () => {
     wrapper.find('button.firstButton').simulate('click');
     expect(actions.loadUsers.called).to.equal(true);
-    expect(actions.loadUsers.getCall(0).args[1]).to.equal(store);
+    expect(actions.loadUsers.getCall(0).args[ 1 ]).to.equal(store);
   });
 
   it('should call an action from another action with store as last arg', () => {
     wrapper.find('button.secondButton').simulate('click');
     expect(actions.loadUserByPk.called).to.equal(true);
-    expect(actions.loadUserByPk.getCall(0).args[0]).to.equal(1);
-    expect(actions.loadUserByPk.getCall(0).args[1]).to.equal(2);
-    expect(actions.loadUserByPk.getCall(0).args[2]).to.equal(store);
+    expect(actions.loadUserByPk.getCall(0).args[ 0 ]).to.equal(1);
+    expect(actions.loadUserByPk.getCall(0).args[ 1 ]).to.equal(2);
+    expect(actions.loadUserByPk.getCall(0).args[ 2 ]).to.equal(store);
   });
 });

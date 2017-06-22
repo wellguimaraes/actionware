@@ -1,64 +1,69 @@
 import getActionName from './getActionName';
+import { Action, ReduxStore, TrackedAction } from './types';
 import { errorListeners } from './listeners';
 import { loadingListeners } from './listeners';
 import { successListeners } from './listeners';
 import { prefix } from './constants';
 import { getStore } from './';
+import { errorTypeSuffix } from './constants';
+import { loadingTypeSuffix } from './constants';
 
-export default function(action) {
-  if (typeof action !== 'function')
+export default function(action: Action): TrackedAction {
+  if (typeof action !== 'function') {
     throw new Error('Action must be a function');
+  }
 
-  if (action.hasOwnProperty('_actionware')) return action._actionware;
+  if (action._trackedAction) {
+    return action._trackedAction;
+  }
 
-  const actionName    = action.name;
-  const generatedName = getActionName(prefix, actionName, action);
-  const successAction = generatedName;
-  const errorAction   = `${generatedName}_error`;
-  const loadingAction = `${generatedName}_loading`;
+  const uniqueName = getActionName(prefix, action.name, action);
 
-  const smartAction = function() {
-    const args = arguments;
+  action._successType = uniqueName;
+  action._errorType = uniqueName + errorTypeSuffix;
+  action._loadingType = uniqueName + loadingTypeSuffix;
+  action.toString = () => uniqueName;
 
-    let store = getStore();
+  const trackedAction: TrackedAction = function(...args) {
+    let store: ReduxStore = getStore();
 
-    const { dispatch } = store;
+    // Handle errors upon action execution
+    const handleError = (error: Error) => {
+      if (typeof action.onError === 'function')
+        action.onError.apply(null, [error, ...args]);
 
-    const handleError = error => {
-      // call action error handler if available
-      if (action.onError) action.onError.apply(null, [ error, ...args ]);
-
-      // call global error listeners
-      errorListeners.forEach(fn => fn.apply(null, [ smartAction, error, ...args ]));
-
-      // dispatch error action
-      dispatch({ type: errorAction, payload: { error, args, _actionwareError: true } });
+      errorListeners.forEach(fn => fn.apply(null, [action, error, ...args]));
+      store.dispatch({
+        action,
+        type: action._errorType,
+        payload: { error, args, actionwareError: true }
+      });
     };
 
     try {
       // call global loading listeners
-
-      const actionResponse  = action.apply(null, [ ...args, store ]);
-      const isAsync         = actionResponse instanceof Promise;
-      const responsePromise = Promise.resolve(actionResponse);
+      const actionResponse = action.apply(null, [...args, store]);
+      const isAsync = actionResponse instanceof Promise;
+      const payloadPromise = Promise.resolve(actionResponse);
 
       if (isAsync) {
         // dispatch loading action
-        dispatch({ type: loadingAction, payload: true });
-        loadingListeners.forEach(fn => fn.apply(null, [ smartAction, true, ...args ]));
+        store.dispatch({ action, type: action._loadingType, payload: true });
+        loadingListeners.forEach(fn => fn.apply(null, [action, true, ...args]));
       }
 
-      return responsePromise.then(
+      // prettier-ignore
+      return payloadPromise.then(
         payload => {
           // dispatch success actions
-          dispatch({ type: successAction, payload });
+          store.dispatch({ action, type: action._successType, payload });
 
           if (typeof action.onSuccess === 'function')
             action.onSuccess.apply(null, [ payload, ...args, store ]);
 
           // call global success listeners
-          successListeners.forEach(fn => fn.apply(null, [ smartAction, payload, ...args ]));
-          loadingListeners.forEach(fn => fn.apply(null, [ smartAction, false, ...args ]));
+          successListeners.forEach(fn => fn.apply(null, [ action, payload, ...args ]));
+          loadingListeners.forEach(fn => fn.apply(null, [ action, false, ...args ]));
         },
         error => {
           handleError(error);
@@ -71,18 +76,8 @@ export default function(action) {
     }
   };
 
-  action.toString    = () => successAction;
-  action.success     = successAction;
-  action.error       = errorAction;
-  action.loading     = loadingAction;
-  action._actionware = smartAction;
+  action._trackedAction = trackedAction;
+  trackedAction._wrappedAction = action;
 
-  smartAction.toString   = () => successAction;
-  smartAction.success    = successAction;
-  smartAction.error      = errorAction;
-  smartAction.loading    = loadingAction;
-  smartAction.actionName = actionName;
-  smartAction.type       = 'actionware';
-
-  return smartAction;
+  return trackedAction;
 }

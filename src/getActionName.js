@@ -1,11 +1,12 @@
+import { Action } from "./types";
 const actionNames = {};
 
-export default function(prefix, name, action) {
+export default function (prefix: string, name: string, action: Action): string {
   let existingIndex = -1;
 
   if (!actionNames.hasOwnProperty(name)) {
     actionNames[ name ] = [ action ];
-    existingIndex       = 0;
+    existingIndex = 0;
   } else {
     existingIndex = actionNames[ name ].findIndex(it => it === action);
   }
@@ -17,5 +18,5 @@ export default function(prefix, name, action) {
 
   return existingIndex === 0
     ? prefix + name
-    : prefix + name + `_${existingIndex + 1}`;
+    : prefix + name + '_' + (existingIndex + 1);
 }

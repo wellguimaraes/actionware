@@ -8,18 +8,30 @@ Redux with less boilerplate, side-effects under control and action statuses in a
 \* Since it's a little bit confusing to have _action types_, _action creators_ and _actions_, with **Actionware**, you have just _actions_ which are actually simple named functions.
 
 # API
+
+#### Setup  
 - **setStore**(store: object): void
-- **withActions**(actions: object): function(wrapperComponent: Component)
-- **call**(action: function, ...args)
+
+#### Most used
+- **withActions**(actions: object): Function(wrapperComponent: Component)
+- **isLoading**(action: Function): bool
+- **getError**(action: Function): object
+- **call**(action: Function, ...args)
+
+#### Reducers related
 - **createReducer**(initialState: object, handlers: []): function
-- **isLoading**(action: function): bool
-- **getError**(action: function): object
-- **on**(...action: function|string): Array<string>
-- **onError**(action: function): string
-- **onLoading**(action: function): string
-- **addSuccessListener**(listener: function(action, payload, ...args))
-- **addErrorListener**(listener: function(action, error, ...args))
-- **addLoadingListener**(listener: function(action, isLoading, ...args))
+- **on**(...actions: Function|string): Array<string>
+- **onError**(action: Function): string
+- **onLoading**(action: Function): string
+
+#### Setting-up global listeners
+
+- **addSuccessListener**(listener: Function(action, payload, ...args) => void)
+- **addErrorListener**(listener: Function(action, error, ...args) => void)
+- **addLoadingListener**(listener: Function(action, isLoading, ...args) => void)
+
+#### Test helpers
+- **setCallStub**(callStub: function)
 
 # Use it
 
@@ -33,7 +45,7 @@ setStore(myAppStore);
 
 ##### Simple actions:
 ```js
-export const incrementCounter = () => {}
+export function incrementCounter() { }
 ```
 
 ##### Async actions:
@@ -70,15 +82,17 @@ export async function anotherAction() {
 ##### Injecting actions into components as props:
 ```js
 import { withActions } from 'actionware';
-import { loadUsers, incrementCounter } from 'path/to/actions';
+import { loadUsers } from 'path/to/actions';
 
 class MyConnectedComponent extends Component {
+  componentDidMount() {
+    this.props.loadUsers();    
+  }
+  
   // ...
 }
 
-const actions = { loadUsers, incrementCounter };
-
-export default withActions(actions)(MyConnectedComponent);
+export default withActions({ loadUsers })(MyConnectedComponent);
 ```
 
 ##### Reducers:
@@ -91,39 +105,33 @@ const initialState = { users: [], count: 0 };
 export default createReducer(initialState, [
   on(incrementCounter), 
   (state) => {
-    return { 
-      ...state, 
-      count: state.count + 1
-    };  
+    // return new state
   },
   
   on(loadUsers), 
   (state, users) => {
-    return { ...state, users };
+    // return new state
   },
   
-  on(anAction, anotherAction),
+  // multiple actions using the same handler
+  on(anAction, anotherAction), 
   (state, payload) => { 
-    // ...
+    // return new state
   },
   
+  //
   // Actionware handles errors and loading statuses,
   // but if you need to do something else...
-
+  //
+  
   onError(loadUsers), 
   (state, error, ...args) => {
-    return {
-      ...state,
-      //...
-    }
+    // return new state
   },
   
   onLoading(loadUsers), 
   (state, isLoading) => {
-    return {
-      ...state,
-      //...
-    }
+    // return new state
   }
 ]);
 ```
@@ -134,10 +142,7 @@ import { combineReducers } from 'redux';
 import { actionwareReducer as actionware } from 'actionware';
 import users from 'path/to/usersReducer';
 
-const rootReducer = combineReducers({
-  users,
-  actionware
-});
+const rootReducer = combineReducers({ users, actionware });
 ```
 
 ##### Now you have loading and failure statuses for all your actions:
@@ -153,9 +158,9 @@ class MyComponent extends React.Component {
 // whenever you need some action loading/error states, just map them
 function mapStateToProps(state) {
   return {
-    //...
-    loading: isLoading(loadUsers),
-    error  : getError(loadUsers)
+    something : state.something,
+    loading   : isLoading(loadUsers),
+    error     : getError(loadUsers)
   };
 }
 
@@ -168,23 +173,19 @@ export default connect(mapStateToProps)(
 
 ##### Add global listeners:
 ```js
-import { 
-  addSuccessListener, 
-  addErrorListener, 
-  addLoadingListener 
-} from 'actionware';
+import { addSuccessListener, addErrorListener, addLoadingListener } from 'actionware';
 
 // Here's where the optional action name may be useful
 
 addSuccessListener((action, payload, ...args) => {
-  console.log(action.actionName);
+  console.log(action.name);
 });
 
 addErrorListener((action, error, ...args) => {
-  console.log(action.actionName);
+  console.log(action.name);
 });
 
 addLoadingListener((action, isLoading, ...args) => {
-  console.log(action.actionName);
+  console.log(action.name);
 });
 ```

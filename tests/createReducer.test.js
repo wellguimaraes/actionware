@@ -80,8 +80,8 @@ describe('createReducer', () => {
       }
     ]);
 
-    expect(loadUserByPk.success).to.equal(loadUserByPk.toString());
-    expect(loadAllUsers.success).to.equal(loadAllUsers.toString());
+    expect(loadUserByPk._successType).to.equal(loadUserByPk.toString());
+    expect(loadAllUsers._successType).to.equal(loadAllUsers.toString());
   });
 
   describe('reducer', () => {
