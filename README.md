@@ -38,7 +38,7 @@ Redux with less boilerplate, side-effects under control and action statuses in a
 
 # Use it
 
-##### After creating you Redux store and before using actions:
+#### After creating you Redux store and before using actions:
 
 ```js
 import { setStore } from 'actionware';
@@ -46,22 +46,22 @@ import { setStore } from 'actionware';
 setStore(myAppStore);
 ```
 
-##### Simple actions:
+#### Simple actions:
 ```js
 export function incrementCounter() { }
 ```
 
-##### Async actions:
+#### Async actions:
 ```js
 export async function loadUsers(arg1, arg2, argN, store) { // the last arg is always the store
   const response = await fetch('/my/api/users');
   
   // whatever you return will be the action payload 
-  return response.json();   
+  return response.json();
 }
 ```
 
-##### Optional per action success and error handlers:
+#### Optional per action success and error handlers:
 ```js
 loadUsers.onSuccess = (payload, arg1, arg2, argN, store) => {
   // ...
@@ -72,19 +72,8 @@ loadUsers.onError = (error, arg1, arg2, argN) => {
 }
 ```
 
-##### If you're not inside a component, use call to invoke any action: 
-Using `call` is the way to invoke a function (action) and let Actionware handle
-the its execution lifecycle (managing error and loading statuses, listeners, etc).
-```js
-import { call } from 'actionware';
-
-export async function anotherAction() {
-  // ...
-  await call(loadUsers, arg1, arg2, argN);
-}
-```
-
-##### Injecting actions into components as props:
+#### Injecting actions into components as props:
+This way, action functions are handled by Actionware
 ```js
 import { withActions } from 'actionware';
 import { loadUsers } from 'path/to/actions';
@@ -93,14 +82,23 @@ class MyConnectedComponent extends Component {
   componentDidMount() {
     this.props.loadUsers();    
   }
-  
-  // ...
 }
 
 export default withActions({ loadUsers })(MyConnectedComponent);
 ```
 
-##### Reducers:
+#### If you're not inside a component, use call to invoke any action: 
+Using `call` is the way to invoke a function (action) and let Actionware handle
+the its execution lifecycle (managing error and loading statuses, listeners, etc).
+```js
+import { call } from 'actionware';
+
+export async function somewhereOverTheRainbow() {
+  await call(loadUsers, arg1, arg2, argN);
+}
+```
+
+#### Reducers:
 ```js
 import { createReducer, on, onError, onLoading } from 'actionware';
 import { loadUsers, incrementCounter } from 'path/to/actions';
@@ -141,7 +139,7 @@ export default createReducer(initialState, [
 ]);
 ```
 
-##### Add actionware reducer to your root reducer:
+#### Add actionware reducer to your root reducer:
 ```js
 import { combineReducers } from 'redux';
 import { actionwareReducer as actionware } from 'actionware';
@@ -150,7 +148,7 @@ import users from 'path/to/usersReducer';
 const rootReducer = combineReducers({ users, actionware });
 ```
 
-##### Now you have loading and failure statuses for all your actions:
+#### Now you have loading and failure statuses for all your actions:
 ```js
 import { connect } from 'react-redux'; 
 import { getError, isLoading, withActions } from 'actionware';
@@ -176,7 +174,7 @@ export default connect(mapStateToProps)(
 )
 ```
 
-##### Add global listeners:
+#### Add global listeners:
 ```js
 import { 
   addSuccessListener, 
