@@ -1,4 +1,5 @@
-# Actionware
+# <img src='https://raw.githubusercontent.com/wellguimaraes/actionware/master/assets/actionware-logo.png' height='60'>
+
 Redux with less boilerplate, side-effects under control and action statuses in a single pack:
 - no need to dispatch actions
 - get rid of strings to identify actions types
