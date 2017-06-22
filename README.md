@@ -167,10 +167,8 @@ function mapStateToProps(state) {
   };
 }
 
-const actions = { loadUsers };
-
 export default connect(mapStateToProps)(
-  withActions(actions)(MyComponent)
+  withActions({ loadUsers })(MyComponent)
 )
 ```
 
