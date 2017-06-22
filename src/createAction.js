@@ -10,7 +10,7 @@ import { ERROR_TYPE_SUFFIX } from './constants';
 import { LOADING_TYPE_SUFFIX } from './constants';
 import { getStore } from './storeKeeper';
 
-export default function(action: Action): TrackedAction {
+export default function createAction(action: Action): TrackedAction {
   if (typeof action !== 'function') {
     throw new Error('Action must be a function');
   }
@@ -85,4 +85,17 @@ export default function(action: Action): TrackedAction {
   trackedAction._errorType = errorType;
 
   return trackedAction;
+}
+
+
+export function errorType(action: Action) {
+  return createAction(action)._errorType;
+}
+
+export function successType(action: Action) {
+  return createAction(action)._successType;
+}
+
+export function loadingType(action: Action) {
+  return createAction(action)._loadingType;
 }

@@ -31,7 +31,10 @@ Redux with less boilerplate, side-effects under control and action statuses in a
 - **addLoadingListener**(listener: Function(action, isLoading, ...args) => void)
 
 #### Test helpers
-- **setCallStub**(callStub: function)
+- **mockCallsWith**(fakeCall: Function)
+- **successType**(action: Function)
+- **errorType**(action: Function)
+- **loadingType**(action: Function)
 
 # Use it
 
@@ -70,6 +73,8 @@ loadUsers.onError = (error, arg1, arg2, argN) => {
 ```
 
 ##### If you're not inside a component, use call to invoke any action: 
+Using `call` is the way to invoke a function (action) and let Actionware handle
+the its execution lifecycle (managing error and loading statuses, listeners, etc).
 ```js
 import { call } from 'actionware';
 
@@ -173,7 +178,11 @@ export default connect(mapStateToProps)(
 
 ##### Add global listeners:
 ```js
-import { addSuccessListener, addErrorListener, addLoadingListener } from 'actionware';
+import { 
+  addSuccessListener, 
+  addErrorListener, 
+  addLoadingListener 
+} from 'actionware';
 
 addSuccessListener((action, payload, ...args) => {
   console.log(action.name);
@@ -185,5 +194,46 @@ addErrorListener((action, error, ...args) => {
 
 addLoadingListener((action, isLoading, ...args) => {
   console.log(action.name);
+});
+```
+
+# Testing
+
+#### Mock `call` function
+While testing, you're able to replace the `call` function by a custom spy/stub to 
+check side-effect calls.
+```js
+import { mockCallsWith } from 'actionware';
+
+const callSpy = sinon.spy();
+
+mockCallsWith(callSpy);
+mockCallsWith(null); // Whenever needed, get back to default behavior
+```
+
+#### Reducers
+For testing reducers (created with `createReducers`), you can do the following:
+
+```js
+import { successType } from 'actionware';
+import itemsReducer from 'path/to/itemsReducer';
+import { loadItems } from 'path/to/itemsActions';
+
+describe('someReducer', () => {
+  describe('on loadItems', () => {
+    it('should replace "items" by the loaded items array', () => {
+      const currentState = { items: [ 'something'] }; 
+      const loadedItems = [ 'lorem', 'ipsum', 'dolor' ];
+
+      // Call reducer with currentState and a regular Redux action       
+      const newState = itemsReducer(currentState, { 
+        type: successType(loadItems), 
+        payload: loadedItems
+      });
+      
+      expect(newState.items).to.equals(loadedItems);
+      expect(newState.items.length).to.have.length(3);
+    });  
+  });
 });
 ```
