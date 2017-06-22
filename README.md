@@ -216,7 +216,7 @@ import { successType } from 'actionware';
 import itemsReducer from 'path/to/itemsReducer';
 import { loadItems } from 'path/to/itemsActions';
 
-describe('someReducer', () => {
+describe('itemsReducer', () => {
   describe('on loadItems', () => {
     it('should replace "items" by the loaded items array', () => {
       const currentState = { items: [ 'something'] }; 
