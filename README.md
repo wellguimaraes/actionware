@@ -13,7 +13,7 @@ Redux with less boilerplate, side-effects under control and action statuses in a
 - **setStore**(store: object): void
 
 #### Most used
-- **withActions**(actions: object): Function(wrapperComponent: Component)
+- **withActions**(actions: object): Function(wrappedComponent: Component)
 - **isLoading**(action: Function): bool
 - **getError**(action: Function): object
 - **call**(action: Function, ...args)
