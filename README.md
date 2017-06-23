@@ -224,20 +224,22 @@ addLoadingListener((action, isLoading, ...args) => {
 
 # Testing
 
-#### Mock `call` function
-While testing, you're able to replace the `call` function by a custom spy/stub to 
-check side-effect calls.
+#### Mock `call` and `next` function
+While testing, you're able to replace the `call` and `next` functions by custom 
+spy/stub to simplify tests.
 ```js
-import { mockCallWith } from 'actionware';
+import { mockCallWith, mockNextWith } from 'actionware';
 
 const callSpy = sinon.spy();
+const nextStub = sinon.stub().returns(Promise.resolve());
 
 mockCallWith(callSpy);
-mockCallWith(null); // Whenever needed, get back to default behavior
+mockNextWith(nextStub);
+
+// Whenever needed, get back to default behaviors
+mockCallWith(null); 
+mockNextWith(null); 
 ```
-
-#### Interaction-dependent flows
-
 
 #### Reducers
 For testing reducers (created with `createReducers`), you can do the following:
