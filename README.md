@@ -39,40 +39,58 @@ Redux with less boilerplate, side-effects under control and action statuses in a
 - **errorType**(action: Function)
 - **loadingType**(action: Function)
 
-# Use it
+# Setup
 
-#### After creating you Redux store and before using actions:
+#### Install it
+```
+npm i actionware --save
+```
 
+#### After creating your Redux store, let Actionware know your store instance:
 ```js
 import { setStore } from 'actionware';
 
 setStore(myAppStore);
 ```
 
-#### Simple actions:
+#### Add actionware reducer to your root reducer:
+```js
+import { combineReducers } from 'redux';
+import { actionwareReducer as actionware } from 'actionware';
+
+const rootReducer = combineReducers({ 
+  actionware,
+  // ...
+});
+```
+
+# Usage
+
+#### Simple actions
 ```js
 export function incrementCounter() { }
 ```
 
-#### Async actions:
+#### Async actions
+Whatever you return will be the action payload 
+
 ```js
 export async function loadUsers(arg1, arg2, argN, store) { // the last arg is always the store
   const response = await fetch('/my/api/users');
   
-  // whatever you return will be the action payload 
   return response.json();
 }
 ```
 
-#### Optional per action success and error handlers:
+#### Optional per-action success and error handlers:
 ```js
 loadUsers.onSuccess = (payload, arg1, arg2, argN, store) => {
   // ...
-}
+};
 
 loadUsers.onError = (error, arg1, arg2, argN) => {
   // ...
-}
+};
 ```
 
 #### Injecting actions into components as props:
@@ -168,15 +186,6 @@ export default createReducer(initialState, [
 ]);
 ```
 
-#### Add actionware reducer to your root reducer:
-```js
-import { combineReducers } from 'redux';
-import { actionwareReducer as actionware } from 'actionware';
-import users from 'path/to/usersReducer';
-
-const rootReducer = combineReducers({ users, actionware });
-```
-
 #### Now you have loading and failure statuses for all your actions:
 ```js
 import { connect } from 'react-redux'; 
@@ -224,7 +233,7 @@ addLoadingListener((action, isLoading, ...args) => {
 
 # Testing
 
-#### Mock `call` and `next` function
+#### Mock `call` and `next` functions
 While testing, you're able to replace the `call` and `next` functions by custom 
 spy/stub to simplify tests.
 ```js
