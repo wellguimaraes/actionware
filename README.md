@@ -286,4 +286,4 @@ describe('itemsReducer', () => {
 - **loadingType**(action: Function)
 
 ## License
-[MIT](LICENSE.md) &copy; Wellington Guimaraes
+[MIT](LICENSE) &copy; Wellington Guimaraes
