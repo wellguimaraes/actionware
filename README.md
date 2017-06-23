@@ -18,6 +18,7 @@ Redux with less boilerplate, side-effects under control and action statuses in a
 - **isLoading**(action: Function): bool
 - **getError**(action: Function): object
 - **call**(action: Function, ...args)
+- **next**(action: Function)
 
 #### Reducers related
 - **createReducer**(initialState: object, handlers: []): function
@@ -32,7 +33,8 @@ Redux with less boilerplate, side-effects under control and action statuses in a
 - **addLoadingListener**(listener: Function(action, isLoading, ...args) => void)
 
 #### Test helpers
-- **mockCallsWith**(fakeCall: Function)
+- **mockCallWith**(fakeCall: Function)
+- **mockNextWith**(fakeWaiter: Function)
 - **successType**(action: Function)
 - **errorType**(action: Function)
 - **loadingType**(action: Function)
@@ -97,6 +99,32 @@ import { call } from 'actionware';
 export async function somewhereOverTheRainbow() {
   await call(loadUsers, arg1, arg2, argN);
 }
+```
+
+#### Interaction-dependent flows
+When you have "complex" flows that depend on some interaction to start or continue,
+you can use `next` in this fashion:
+```js
+import { call, next } from 'actionware';
+
+// Once this function is executed, it starts the flow
+export async function appEducationFlow() {
+
+  // It waits for the next successful login
+  await next(login); 
+  
+  await call(showTip, 'headerButtons');
+  await next(acknowledgeTip);
+  
+  await call(showTip, 'sideMenu');
+  await next(acknowledgeTip);
+  
+  router.redirect('some/route');
+  
+}
+
+// Start app education flow
+appEducationFlow();
 ```
 
 #### Reducers:
@@ -200,13 +228,16 @@ addLoadingListener((action, isLoading, ...args) => {
 While testing, you're able to replace the `call` function by a custom spy/stub to 
 check side-effect calls.
 ```js
-import { mockCallsWith } from 'actionware';
+import { mockCallWith } from 'actionware';
 
 const callSpy = sinon.spy();
 
-mockCallsWith(callSpy);
-mockCallsWith(null); // Whenever needed, get back to default behavior
+mockCallWith(callSpy);
+mockCallWith(null); // Whenever needed, get back to default behavior
 ```
+
+#### Interaction-dependent flows
+
 
 #### Reducers
 For testing reducers (created with `createReducers`), you can do the following:

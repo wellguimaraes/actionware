@@ -8,6 +8,6 @@ export function call(action, ...args) {
     : createAction(action).apply(null, args);
 }
 
-export function mockCallsWith(callStub?: Function) {
-  _callMock = callStub;
+export function mockCallWith(callMock?: Function) {
+  _callMock = callMock;
 }

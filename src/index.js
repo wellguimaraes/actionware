@@ -17,7 +17,10 @@ export { on } from './createReducer';
 export { onError } from './createReducer';
 export { onLoading } from './createReducer';
 
-export { mockCallsWith } from './call';
+export { mockCallWith } from './call';
 export { successType } from './createAction';
 export { errorType } from './createAction';
 export { loadingType } from './createAction';
+
+export { next } from './next';
+export { mockNextWith } from './next';

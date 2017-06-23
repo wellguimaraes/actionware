@@ -2,13 +2,15 @@ import getActionName from './getActionName';
 import { Action } from './types';
 import { ReduxStore } from './types';
 import { TrackedAction } from './types';
-import { errorListeners } from './listeners';
-import { loadingListeners } from './listeners';
-import { successListeners } from './listeners';
 import { NAME_PREFIX } from './constants';
 import { ERROR_TYPE_SUFFIX } from './constants';
 import { LOADING_TYPE_SUFFIX } from './constants';
 import { getStore } from './storeKeeper';
+import { rejectWaiters } from './next';
+import { resolveWaiters } from './next';
+import { notifyErrorListeners } from './listeners';
+import { notifyLoadingListeners } from './listeners';
+import { notifySuccessListeners } from './listeners';
 
 export default function createAction(action: Action): TrackedAction {
   if (typeof action !== 'function') {
@@ -32,12 +34,14 @@ export default function createAction(action: Action): TrackedAction {
       if (typeof action.onError === 'function')
         action.onError.apply(null, [error, ...args]);
 
-      errorListeners.forEach(fn => fn.apply(null, [action, error, ...args]));
       store.dispatch({
         trackedAction,
         type: errorType,
         payload: { error, args, actionwareError: true }
       });
+
+      notifyErrorListeners(action, error, args);
+      rejectWaiters(action);
     };
 
     try {
@@ -49,7 +53,7 @@ export default function createAction(action: Action): TrackedAction {
       if (isAsync) {
         // dispatch loading action
         store.dispatch({ trackedAction, type: loadingType, payload: true });
-        loadingListeners.forEach(fn => fn.apply(null, [action, true, ...args]));
+        notifyLoadingListeners(action, true, args);
       }
 
       // prettier-ignore
@@ -62,8 +66,9 @@ export default function createAction(action: Action): TrackedAction {
             action.onSuccess.apply(null, [ payload, ...args, store ]);
 
           // call global success listeners
-          successListeners.forEach(fn => fn.apply(null, [ action, payload, ...args ]));
-          loadingListeners.forEach(fn => fn.apply(null, [ action, false, ...args ]));
+          notifySuccessListeners(action, payload, args);
+          notifyLoadingListeners(action, false, args);
+          resolveWaiters(action);
         },
         error => {
           handleError(error);
@@ -86,7 +91,6 @@ export default function createAction(action: Action): TrackedAction {
 
   return trackedAction;
 }
-
 
 export function errorType(action: Action) {
   return createAction(action)._errorType;

@@ -4,6 +4,7 @@ export type Action = {
   onSuccess: (payload: any, ...args: any[]) => void;
   apply: Function;
   call: Function;
+  _waiters: Array<{ resolve, reject }>
   _trackedAction: TrackedAction;
 }
 
