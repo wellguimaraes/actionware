@@ -5,15 +5,18 @@
 [![Code Climate](https://codeclimate.com/github/wellguimaraes/actionware/badges/gpa.svg)](https://codeclimate.com/github/wellguimaraes/actionware)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
 
-Redux with less boilerplate, side-effects under control and action statuses in a single pack:
-- no need to dispatch actions
-- get rid of strings to identify actions types
+Redux with less boilerplate, simpler concepts and async statuses in a single shot:
+
+- no more strings to identify actions types
+- just actions**¹** and reducers (no more action creators and action types)
+- actions automatically dispatch their result
 - error status for every action with no extra code
 - loading status for every async action (yep, no extra code!)
 
-\* Since it's a little bit confusing to have _action types_, _action creators_ and _actions_, with **Actionware**, you have just _actions_ which are actually simple named functions.
+--------------
+<small>**¹** With Actionware, **actions** have a different meaning. Check usage section to better understand.</small>
 
-# Setup
+## Setup
 
 #### Install it
 ```
@@ -38,7 +41,7 @@ const rootReducer = combineReducers({
 });
 ```
 
-# Usage
+## Usage
 
 #### Simple actions
 ```js
@@ -205,7 +208,7 @@ addLoadingListener((action, isLoading, ...args) => {
 });
 ```
 
-# Testing
+## Testing
 
 #### Mock `call` and `next` functions
 While testing, you're able to replace the `call` and `next` functions by custom 
@@ -251,7 +254,7 @@ describe('itemsReducer', () => {
 ```
 
 
-# API
+## API
 
 #### Setup  
 - **setStore**(store: object): void
@@ -281,3 +284,6 @@ describe('itemsReducer', () => {
 - **successType**(action: Function)
 - **errorType**(action: Function)
 - **loadingType**(action: Function)
+
+## License
+[MIT](LICENSE.md) &copy; Wellington Guimaraes
