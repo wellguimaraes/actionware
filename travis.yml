@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - '6'
+cache:
+  directories:
+  - node_modules
+install:
+  - npm install --no-optional
+script:
+  - npm run test
+notifications:
+  email: true
