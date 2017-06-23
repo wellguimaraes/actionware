@@ -1,5 +1,10 @@
 # <img src='https://raw.githubusercontent.com/wellguimaraes/actionware/master/assets/actionware-logo.png' height='60'>
 
+
+[![Build Status](https://travis-ci.org/wellguimaraes/actionware.svg?branch=master)](https://travis-ci.org/wellguimaraes/actionware)
+[![Code Climate](https://codeclimate.com/github/wellguimaraes/actionware/badges/gpa.svg)](https://codeclimate.com/github/wellguimaraes/actionware)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
+
 Redux with less boilerplate, side-effects under control and action statuses in a single pack:
 - no need to dispatch actions
 - get rid of strings to identify actions types
@@ -7,37 +12,6 @@ Redux with less boilerplate, side-effects under control and action statuses in a
 - loading status for every async action (yep, no extra code!)
 
 \* Since it's a little bit confusing to have _action types_, _action creators_ and _actions_, with **Actionware**, you have just _actions_ which are actually simple named functions.
-
-# API
-
-#### Setup  
-- **setStore**(store: object): void
-
-#### Most used
-- **withActions**(actions: object): Function(wrappedComponent: Component)
-- **isLoading**(action: Function): bool
-- **getError**(action: Function): object
-- **call**(action: Function, ...args)
-- **next**(action: Function)
-
-#### Reducers related
-- **createReducer**(initialState: object, handlers: []): function
-- **on**(...actions: Function|string): Array<string>
-- **onError**(action: Function): string
-- **onLoading**(action: Function): string
-
-#### Setting-up global listeners
-
-- **addSuccessListener**(listener: Function(action, payload, ...args) => void)
-- **addErrorListener**(listener: Function(action, error, ...args) => void)
-- **addLoadingListener**(listener: Function(action, isLoading, ...args) => void)
-
-#### Test helpers
-- **mockCallWith**(fakeCall: Function)
-- **mockNextWith**(fakeWaiter: Function)
-- **successType**(action: Function)
-- **errorType**(action: Function)
-- **loadingType**(action: Function)
 
 # Setup
 
@@ -275,3 +249,35 @@ describe('itemsReducer', () => {
   });
 });
 ```
+
+
+# API
+
+#### Setup  
+- **setStore**(store: object): void
+
+#### Most used
+- **withActions**(actions: object): Function(wrappedComponent: Component)
+- **isLoading**(action: Function): bool
+- **getError**(action: Function): object
+- **call**(action: Function, ...args)
+- **next**(action: Function)
+
+#### Reducers related
+- **createReducer**(initialState: object, handlers: []): function
+- **on**(...actions: Function|string): Array<string>
+- **onError**(action: Function): string
+- **onLoading**(action: Function): string
+
+#### Setting-up global listeners
+
+- **addSuccessListener**(listener: Function(action, payload, ...args) => void)
+- **addErrorListener**(listener: Function(action, error, ...args) => void)
+- **addLoadingListener**(listener: Function(action, isLoading, ...args) => void)
+
+#### Test helpers
+- **mockCallWith**(fakeCall: Function)
+- **mockNextWith**(fakeWaiter: Function)
+- **successType**(action: Function)
+- **errorType**(action: Function)
+- **loadingType**(action: Function)
