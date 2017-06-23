@@ -1,10 +1,10 @@
 export type Action = {
   name: string;
-  onError: (error: Error, ...args: any[]) => void;
-  onSuccess: (payload: any, ...args: any[]) => void;
   apply: Function;
   call: Function;
-  _waiters: Array<{ resolve, reject }>
+  onError: (error: Error, ...args: any[]) => void;
+  onSuccess: (payload: any, ...args: any[]) => void;
+  _waiters: Array<Promise>;
   _trackedAction: TrackedAction;
 }
 
