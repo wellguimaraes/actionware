@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/wellguimaraes/actionware/master/assets/actionware-logo.png' height='100'>
+# <img src='https://raw.githubusercontent.com/wellguimaraes/actionware/master/assets/logo.png' height='100'>
 
 
 [![Build Status](https://travis-ci.org/wellguimaraes/actionware.svg?branch=master)](https://travis-ci.org/wellguimaraes/actionware)
