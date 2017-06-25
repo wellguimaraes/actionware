@@ -60,7 +60,7 @@ export async function loadUsers(arg1, arg2, argN, store) {
 ```
 
 #### Invoke any action 
-Using `call` is the way to invoke an action and let Actionware handle
+Use `call` to invoke an action and let Actionware handle
 the execution lifecycle (managing error and busy statuses, listeners, etc).
 ```js
 import { call } from 'actionware';
