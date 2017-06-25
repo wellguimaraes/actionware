@@ -1,55 +1,10 @@
-import createReducer from 'createReducer';
+import { createReducer } from 'createReducer';
+import { successType } from 'createAction';
 import { on } from 'index';
 
 describe('createReducer', () => {
-  it('should throw an exception if no initial state is provided', () => {
-    expect(createReducer).to.throw();
-  });
-
-  it('should throw an exception if no handlers or invalid handlers type is provided', () => {
-    expect(createReducer.bind(null, {})).to.throw();
-    expect(createReducer.bind(null, {}, {})).to.throw();
-    expect(createReducer.bind(null, {}, [])).to.throw();
-    expect(createReducer.bind(null, {}, [ 'a', 'b' ])).to.throw();
-    expect(createReducer.bind(null, {}, [ 1, () => {} ])).to.throw();
-    expect(createReducer.bind(null, {}, [ [], () => {} ])).to.throw();
-    expect(createReducer.bind(null, {}, [ [ 1 ], () => {} ])).to.throw();
-    expect(createReducer.bind(null, {}, [ 'a', () => {}, 'b' ])).to.throw();
-  });
-
-  it('should not throw if arguments are in the correct format', () => {
-    const loadUserByPk = function() {};
-
-    let handlers = [
-      on(loadUserByPk),
-      (state, ignore) => {
-        return state;
-      },
-
-      on('anotherActionName'),
-      (state, ignore) => {
-        return state;
-      }
-    ];
-
-    expect(createReducer.bind(null, {}, handlers)).not.to.throw();
-  });
-
   it('should return a function', () => {
-    const loadUserByPk = () => {};
-
-    const reducer = createReducer({}, [
-      on(loadUserByPk),
-      (state, ignore) => {
-        return state;
-      },
-
-      on('anotherActionName'),
-      (state, ignore) => {
-        return state;
-      }
-    ]);
-
+    const reducer = createReducer({})
     expect(typeof reducer).to.equal('function');
   });
 
@@ -58,12 +13,15 @@ describe('createReducer', () => {
     const loadAllUsers = () => {};
     const handler      = spy();
 
-    const reducer = createReducer({}, [
-      on(loadUserByPk, loadAllUsers), handler
-    ]);
+    const reducer = createReducer({})
+      .on(
+        loadUserByPk,
+        loadAllUsers,
+        handler
+      );
 
-    reducer({}, { type: loadUserByPk._trackedAction._successType });
-    reducer({}, { type: loadAllUsers._trackedAction._successType });
+    reducer({}, { type: successType(loadUserByPk) });
+    reducer({}, { type: successType(loadAllUsers) });
     reducer({}, { type: 'loremIpsumDolor' });
 
     expect(handler.calledTwice).to.equal(true);
@@ -72,17 +30,9 @@ describe('createReducer', () => {
   describe('reducer', () => {
     const loadUserByPk = () => {};
 
-    const reducer = createReducer({}, [
-      loadUserByPk,
-      (state, ignore) => {
-        return { ...state, x: 1 };
-      },
-
-      'anotherActionName',
-      (state, ignore) => {
-        return { ...state, x: 2 };
-      }
-    ]);
+    const reducer = createReducer({})
+      .on(loadUserByPk, (state, ignore) => ({ ...state, x: 1 }))
+      .on('anotherActionName', (state, ignore) => ({ ...state, x: 2 }));
 
     const currentState = { x: 0 };
 

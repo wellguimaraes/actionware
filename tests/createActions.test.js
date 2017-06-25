@@ -1,4 +1,5 @@
 import createActions from 'createActions';
+import { expect } from 'chai';
 
 describe('createActions', () => {
   it('should throw an error when argument is not an object', () => {

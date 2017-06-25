@@ -1,5 +1,5 @@
 import { Action } from "./types";
-const actionNames = {};
+const actionNames: any = {};
 
 export default function (prefix: string, name: string, action: Action): string {
   let existingIndex = -1;

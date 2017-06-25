@@ -1,5 +1,5 @@
 import React from 'react';
-import withActions from 'withActions';
+import { withActions } from 'withActions';
 import jsdom from 'mocha-jsdom';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';

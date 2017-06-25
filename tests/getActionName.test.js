@@ -2,7 +2,7 @@ import getActionName from 'getActionName';
 
 describe('getActionName', () => {
   it('should return action name with prefix', () => {
-    const actionName  = getActionName('lorem:', 'ipsum', () => {})
+    const actionName  = getActionName('lorem:', 'ipsum', () => {});
     const actionName2 = getActionName('lorem:', 'ipsum', () => {});
 
     expect(actionName).to.equal('lorem:ipsum');
