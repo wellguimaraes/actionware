@@ -3,15 +3,15 @@
 [![Build Status](https://travis-ci.org/wellguimaraes/actionware.svg?branch=master)](https://travis-ci.org/wellguimaraes/actionware)
 [![Code Climate](https://codeclimate.com/github/wellguimaraes/actionware/badges/gpa.svg)](https://codeclimate.com/github/wellguimaraes/actionware)
 
-Use [Redux](http://redux.js.org/) with less boilerplate, simpler concepts and get actions statuses in a single shot:
+[Redux](http://redux.js.org/) with less boilerplate, actions statuses and controlled side-effects in a single shot. 
 
-- no more strings to identify **actions types**
-- actually, no more **action creators** and **action types**, just **actions¹** and **reducers**
+- no more **action creators** and **action types**, just **actions¹** and **reducers**
 - **actions** dispatch their result automatically
 - **error status** for every action with no extra code
 - **busy status** for every async action (yep, no extra code!)
 
-<small>**¹** With Actionware, **actions** have a different meaning. See usage section to better understand.</small>
+<small>**¹** With Actionware, **actions** have a different meaning: they're just functions which execution generate events. 
+See usage section to better understand.</small>
 
 ## Setup
 

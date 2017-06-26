@@ -1,9 +1,9 @@
 import { Action } from './types';
 
-let _waiterMock: Function = null;
+let _nextMock: Function = null;
 
 export function mockNextWith(waiterMock?: Function) {
-  _waiterMock = waiterMock;
+  _nextMock = waiterMock;
 }
 
 export function addWaiter(action: Action, promiseCallbacks) {
@@ -24,8 +24,8 @@ export function rejectWaiters(action: Action, error: Error) {
 }
 
 export function next(action: Action) {
-  if (_waiterMock)
-    return _waiterMock(action);
+  if (_nextMock)
+    return _nextMock(action);
 
   return new Promise((resolve, reject) => {
     addWaiter(action, { resolve, reject });

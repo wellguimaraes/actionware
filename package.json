@@ -4,10 +4,10 @@
   "description": "Use Redux with much less boilerplate and get busy and error states for every action with no extra code.",
   "main": "./dist/index.js",
   "scripts": {
-    "prepublish": "npm run build",
     "test": "tsc&&cross-env NODE_PATH=./lib mocha ./tests/**/**/*.test.js --require before-tests.js --compilers js:babel-register",
-    "test:watch": "npm test -- --watch",
-    "build": "tsc&&babel lib -d lib"
+    "test:watch": "cross-env NODE_PATH=./lib gulp test:watch",
+    "build": "tsc&&babel lib -d lib",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -44,6 +44,7 @@
     "chai": "^4.0.2",
     "cross-env": "^5.0.1",
     "enzyme": "^2.8.2",
+    "gulp": "^3.9.1",
     "jsdom": "^9.0.0",
     "mocha": "^3.4.2",
     "mocha-jsdom": "^1.1.0",
@@ -54,17 +55,8 @@
     "redux": "^3.7.0",
     "redux-mock-store": "^1.2.3",
     "sinon": "^2.3.4",
-    "source-map-support": "^0.4.15",
-    "ts-node": "^3.1.0",
-    "tsconfig-paths": "^2.2.0",
     "typescript": "^2.3.4",
-    "typings": "^2.1.1"
-  },
-  "optionalDependencies": {
-    "flow-bin": "^0.48.0"
-  },
-  "dependencies": {
     "@types/react": "^15.0.31",
-    "react": "^15.6.1"
+    "gulp-mocha": "^4.3.1"
   }
 }
