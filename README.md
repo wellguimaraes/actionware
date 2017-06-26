@@ -2,17 +2,16 @@
 
 [![Build Status](https://travis-ci.org/wellguimaraes/actionware.svg?branch=master)](https://travis-ci.org/wellguimaraes/actionware)
 [![Code Climate](https://codeclimate.com/github/wellguimaraes/actionware/badges/gpa.svg)](https://codeclimate.com/github/wellguimaraes/actionware)
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
 
 Use [Redux](http://redux.js.org/) with less boilerplate, simpler concepts and get actions statuses in a single shot:
 
-- no more strings to identify actions types
-- just actions**¹** and reducers (no more action creators and action types)
-- actions automatically dispatch their result
-- error status for every action with no extra code
-- busy status for every async action (yep, no extra code!)
+- no more strings to identify **actions types**
+- actually, no more **action creators** and **action types**, just **actions¹** and **reducers**
+- **actions** dispatch their result automatically
+- **error status** for every action with no extra code
+- **busy status** for every async action (yep, no extra code!)
 
-<small>**¹** With Actionware, **actions** have a different meaning. Check usage section to better understand.</small>
+<small>**¹** With Actionware, **actions** have a different meaning. See usage section to better understand.</small>
 
 ## Setup
 
