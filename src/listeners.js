@@ -49,5 +49,5 @@ export const addBusyListener = addListener.bind(null, globalBusyListeners, busyT
 export const addErrorListener = addListener.bind(null, globalErrorListeners, errorType);
 
 export const notifySuccessListeners = notifyListeners.bind(null, globalSuccessListeners, successType);
-export const notifyBusyListeners = notifyListeners.bind(null, globalBusyListeners, successType);
-export const notifyErrorListeners = notifyListeners.bind(null, globalErrorListeners, successType);
+export const notifyBusyListeners = notifyListeners.bind(null, globalBusyListeners, busyType);
+export const notifyErrorListeners = notifyListeners.bind(null, globalErrorListeners, errorType);
