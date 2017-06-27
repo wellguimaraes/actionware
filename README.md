@@ -28,7 +28,7 @@ setStore(myAppStore);
 ```
 
 #### Add actionware reducer to your root reducer:
-In order to make Redux store reacts to **busy** and **error** status changes, 
+To make Redux store react to **busy** and **error** status changes, 
 make sure you add the Actionware reducer into your root reducer. 
 ```js
 import { combineReducers } from 'redux';
