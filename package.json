@@ -4,9 +4,9 @@
   "description": "Use Redux with much less boilerplate and get busy and error states for every action with no extra code.",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "tsc&&cross-env NODE_PATH=./lib mocha ./tests/**/**/*.test.js --require before-tests.js --compilers js:babel-register",
-    "test:watch": "cross-env NODE_PATH=./lib gulp test:watch",
-    "build": "tsc&&babel lib -d lib",
+    "test": "cross-env NODE_PATH=./src mocha ./tests/**/**/*.test.js --require before-tests.js --require babel-polyfill --compilers js:babel-register",
+    "test:watch": "npm run test -- --watch",
+    "build": "babel src -d lib",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -33,10 +33,8 @@
     "redux": "^3.0.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.1",
-    "@types/mocha": "^2.2.41",
-    "@types/sinon": "^2.3.1",
     "babel-cli": "^6.24.1",
+    "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.22.0",
@@ -44,7 +42,7 @@
     "chai": "^4.0.2",
     "cross-env": "^5.0.1",
     "enzyme": "^2.8.2",
-    "gulp": "^3.9.1",
+    "flow-bin": "^0.48.0",
     "jsdom": "^9.0.0",
     "mocha": "^3.4.2",
     "mocha-jsdom": "^1.1.0",
@@ -52,11 +50,6 @@
     "react-dom": "^15.6.0",
     "react-redux": "^5.0.5",
     "react-test-renderer": "^15.5.4",
-    "redux": "^3.7.0",
-    "redux-mock-store": "^1.2.3",
-    "sinon": "^2.3.4",
-    "typescript": "^2.3.4",
-    "@types/react": "^15.0.31",
-    "gulp-mocha": "^4.3.1"
+    "sinon": "^2.3.4"
   }
 }

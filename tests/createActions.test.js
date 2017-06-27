@@ -8,15 +8,15 @@ describe('createActions', () => {
 
   it('should return a new object with actions created for the given keys', () => {
     let pureActions = {
-      a: () => 1,
-      b: () => 1,
+      alpha: () => 1,
+      bravo: () => 1
     };
 
     const actions = createActions(pureActions);
 
     expect(actions).not.to.equal(pureActions);
     expect(typeof actions).to.equal('object');
-    expect(typeof actions.a).to.equal('function');
-    expect(typeof actions.b).to.equal('function');
+    expect(typeof actions.alpha).to.equal('function');
+    expect(typeof actions.bravo).to.equal('function');
   });
 });

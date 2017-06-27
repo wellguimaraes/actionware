@@ -1,14 +1,13 @@
 import React from 'react';
-import { withActions } from 'withActions';
 import jsdom from 'mocha-jsdom';
-import configureStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
-import { setStore } from 'index';
-import { call } from 'index';
+import { withActions } from 'withActions';
+import { Provider } from 'react-redux';
+import { setStore } from 'storeKeeper';
+import { call } from 'call';
+import { getStore } from 'storeKeeper';
 
-const mockStore = configureStore([]);
-const store     = mockStore({});
+const store = { dispatch: spy(), getState: spy() };
 
 setStore(store);
 
@@ -18,9 +17,9 @@ describe('withActions', () => {
   let wrapper;
 
   const actions = {
-    loadUsers   : spy(),
+    loadUsers: spy(),
     loadUserByPk: spy(),
-    login       : () => {
+    login: () => {
       call(actions.loadUserByPk, 1, 2);
     }
   };
@@ -44,16 +43,19 @@ describe('withActions', () => {
   it('should pass actions to wrapped component', () => {
     let mountedProps = wrapper.find(MyComponent).props();
     expect(typeof mountedProps.loadUsers).to.equal('function');
-    expect(mountedProps.loadUsers._wrappedAction).to.equal(actions.loadUsers);
   });
 
   it('should call action fn with store as last arg', () => {
+    const store = getStore();
+
     wrapper.find('button.firstButton').simulate('click');
     expect(actions.loadUsers.called).to.equal(true);
     expect(actions.loadUsers.getCall(0).args[ 1 ]).to.equal(store);
   });
 
   it('should call an action from another action with store as last arg', () => {
+    const store = getStore();
+
     wrapper.find('button.secondButton').simulate('click');
     expect(actions.loadUserByPk.called).to.equal(true);
     expect(actions.loadUserByPk.getCall(0).args[ 0 ]).to.equal(1);

@@ -1,17 +1,16 @@
 import { createReducer } from 'createReducer';
 import { successType } from 'createAction';
-import { on } from 'index';
 
 describe('createReducer', () => {
   it('should return a function', () => {
-    const reducer = createReducer({})
+    const reducer = createReducer({});
     expect(typeof reducer).to.equal('function');
   });
 
   it('returned function should call proper function based on given action type', () => {
     const loadUserByPk = () => {};
     const loadAllUsers = () => {};
-    const handler      = spy();
+    const handler = spy();
 
     const reducer = createReducer({})
       .on(

@@ -1,12 +1,12 @@
 import { Store } from "./types";
 
-let _store: Store<any> = null;
+let _store: Store = null;
 
-export function setStore<S>(store: Store<S>) {
+export function setStore(store: Store) {
   _store = store;
 }
 
-export function getStore<S>(): Store<S> {
+export function getStore(): Store {
   if (_store === null) throw new Error('Store has not been set');
   return _store;
 }

@@ -1,7 +1,7 @@
-import { errorType, busyType, successType } from "./createAction";
+import { successType, busyType, errorType } from './createAction';
 import { Reducer } from "./types";
 
-function addHandler<S>(reducer: Reducer<S>, handlers, typifier, ...args) {
+function addHandler(reducer: Reducer, handlers, typifier, ...args) {
   if (args.length < 2)
     throw new Error('You should provide at least an action and a handler');
 
@@ -29,10 +29,10 @@ function addHandler<S>(reducer: Reducer<S>, handlers, typifier, ...args) {
   return reducer;
 }
 
-export function createReducer<S>(initialState: any = {}): Reducer<S> {
+export function createReducer(initialState: any = {}): Reducer {
   const handlers = {};
 
-  const reducer = <Reducer<S>>function (state = initialState, {type, payload}) {
+  const reducer = function (state = initialState, {type, payload}) {
     if (handlers.hasOwnProperty(type)) {
       const handler = handlers[ type ];
       return payload && payload.actionwareError

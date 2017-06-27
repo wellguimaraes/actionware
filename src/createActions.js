@@ -1,6 +1,6 @@
 import createAction from './createAction';
 
-export default function(actions: object): object {
+export default function(actions) {
   if (typeof actions !== 'object')
     throw new Error('actions argument should be an object');
 
