@@ -1,7 +1,7 @@
 import { Action } from "./types";
 const actionNames: any = {};
 
-export default function (prefix: string, name: string, action: Action): string {
+export default function (prefix: string, name: string = 'anonymous', action: Action): string {
   let existingIndex = -1;
 
   if (!actionNames.hasOwnProperty(name)) {

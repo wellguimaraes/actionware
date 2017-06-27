@@ -116,18 +116,18 @@ import { addSuccessListener, addErrorListener, addBusyListener } from 'actionwar
 import { createUser } from 'path/to/actions';
 
 // global success listener
-addSuccessListener((action, payload, ...args) => eventTracker.register(action.name));
+addSuccessListener((action, payload, store) => eventTracker.register(action.name));
 
 // per action success listener
-addSuccessListener(createUser, (user, ...args) => history.push(`/users/${user.id}`));
+addSuccessListener(createUser, (user, store) => history.push(`/users/${user.id}`));
 
 // error listeners
 addErrorListener((action, error, ...args) => { /* ... */ });
 addErrorListener(createUser, (error, ...args) => { /* ... */ });
 
 // busy listeners
-addBusyListener((action, isBusy, ...args) => { /* ... */ });
-addBusyListener(createUser, (isBusy, ...args) => { /* ... */ });
+addBusyListener((action, isBusy, store) => { /* ... */ });
+addBusyListener(createUser, (isBusy, store) => { /* ... */ });
 ```
 
 #### Interaction-dependent flows
@@ -258,14 +258,14 @@ describe('usersReducer', () => {
 #### Listeners
 
 ###### Global
-- **addSuccessListener**(listener: (action, payload, ...args) => void)
+- **addSuccessListener**(listener: (action, payload, store) => void)
 - **addErrorListener**(listener: (action, error, ...args) => void)
-- **addBusyListener**(listener: (action, isBusy, ...args) => void)
+- **addBusyListener**(listener: (action, isBusy, store) => void)
 
 ###### Per action
-- **addSuccessListener**(action: Function, listener: (payload, ...args) => void)
+- **addSuccessListener**(action: Function, listener: (payload, store) => void)
 - **addErrorListener**(action: Function, listener: (error, ...args) => void)
-- **addBusyListener**(action: Function, listener: (isBusy, ...args) => void)
+- **addBusyListener**(action: Function, listener: (isBusy, store) => void)
 
 #### Test helpers
 - **mockCallWith**(fakeCall: Function)

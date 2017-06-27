@@ -22,28 +22,29 @@ export default function createAction(action: Action): TrackedAction {
   const trackedAction = function(...args) {
 
     const store: Store = getStore();
-    const handleSuccess = handleActionSuccess.bind(null, action, args);
     const handleError = handleActionError.bind(null, action, args);
-    const handleBusy = handleActionBusy.bind(null, action, args);
 
     try {
+
       const actionResponse = action.apply(null, [ ...args, store ]);
       const isAsync = actionResponse instanceof Promise;
 
       if (isAsync) {
-        handleBusy();
+        handleActionBusy(action);
 
         return actionResponse.then(
-          handleSuccess,
+          payload => handleActionSuccess(action, payload),
           err => Promise.reject(handleError(err))
         );
       }
 
-      return handleSuccess(actionResponse);
+      return handleActionSuccess(action, actionResponse);
 
     } catch (error) {
+
       handleError(error);
       throw error;
+
     }
   };
 
@@ -58,7 +59,7 @@ export default function createAction(action: Action): TrackedAction {
   return trackedAction;
 }
 
-export function handleActionSuccess(action: Action, args, payload) {
+export function handleActionSuccess(action: Action, payload) {
   const store: Store = getStore();
 
   store.dispatch({
@@ -67,14 +68,14 @@ export function handleActionSuccess(action: Action, args, payload) {
     payload
   });
 
-  notifySuccessListeners(action, payload, args);
-  notifyBusyListeners(action, false, args);
+  notifySuccessListeners(action, payload, [ store ]);
+  notifyBusyListeners(action, false, [ store ]);
   resolveWaiters(action, payload);
 
   return payload;
 }
 
-export function handleActionBusy(action: Action, args) {
+export function handleActionBusy(action: Action) {
   const store: Store = getStore();
 
   store.dispatch({
@@ -83,7 +84,7 @@ export function handleActionBusy(action: Action, args) {
     payload: true
   });
 
-  notifyBusyListeners(action, true, args);
+  notifyBusyListeners(action, true, [ store ]);
 }
 
 export function handleActionError(action: Action, args, error: Error) {
