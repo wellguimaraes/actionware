@@ -16,9 +16,8 @@ See usage section to better understand.</small>
 ## Setup
 
 #### Install it
-```
-npm i actionware --save
-```
+- Yarn: `yarn add actionware`
+- NPM: `npm i actionware --save`
 
 #### After creating your Redux store, let Actionware know your store instance:
 ```js
