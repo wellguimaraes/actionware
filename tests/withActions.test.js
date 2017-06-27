@@ -7,7 +7,7 @@ import { setStore } from 'storeKeeper';
 import { call } from 'call';
 import { getStore } from 'storeKeeper';
 
-const store = { dispatch: spy(), getState: spy() };
+const store = { dispatch: spy(), getState: spy(), subscribe: spy() };
 
 setStore(store);
 
