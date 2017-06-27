@@ -50,6 +50,7 @@
     "react-dom": "^15.6.0",
     "react-redux": "^5.0.5",
     "react-test-renderer": "^15.5.4",
-    "sinon": "^2.3.4"
+    "sinon": "^2.3.4",
+    "redux": "^3.7.1"
   }
 }
