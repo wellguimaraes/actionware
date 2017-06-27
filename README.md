@@ -75,23 +75,28 @@ import { loadUsers, persistUser, incrementCounter } from 'path/to/actions';
 const initialState = { users: [], count: 0 };
 
 export default createReducer(initialState)
-  .on( loadUsers , (state, users) => ({ ...state, users }))
-  .on( incrementCounter , (state) => ({ ...state, counter: state.counter + 1 }))
+  .on(loadUsers, 
+    (state, users) => ({ ...state, users }))
+  
+  .on(incrementCounter, 
+    (state) => ({ ...state, counter: state.counter + 1 }))
   
   // Bind legacy action types
-  .on( 'OLD_ACTION_TYPE' , (state, payload) => { /* return new state */ })
+  .on('OLD_ACTION_TYPE',
+    (state, payload) => { /* return new state */ })
   
   // Bind multiple actions to the same handler    
-  .on( 
-    anAction, 
-    orAnotherAction,
+  .on(someAction, anotherAction,
     (state, payload) => { /* return new state */ })
   
   // Actionware handles errors and busy statuses,
   // but if you need to do something else
   
-  .onError( loadUsers , (state, error, ...args) => { /* return new state */ })
-  .onBusy( loadUsers , (state, isBusy) => { /* return new state */ });
+  .onError(persistUser, 
+    (state, error, ...args) => { /* return new state */ })
+    
+  .onBusy(loadUsers, 
+    (state, isBusy) => { /* return new state */ });
 ```
 
 #### Busy and failure statuses for all your actions:
