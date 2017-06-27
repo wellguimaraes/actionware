@@ -3,7 +3,7 @@ import { ERROR_TYPE_SUFFIX } from './constants';
 import { BUSY_TYPE_SUFFIX } from './constants';
 import { TrackedAction } from './types';
 
-export function actionwareReducer(state, action) {
+export function actionwareReducer(state = {}, action) {
   const type: string = action.type;
   const payload: any = action.payload;
   const trackedAction: TrackedAction = action.trackedAction;
