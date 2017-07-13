@@ -5,8 +5,8 @@ function addHandler(reducer: Reducer, handlers, typifier, ...args) {
   if (args.length < 2)
     throw new Error('You should provide at least an action and a handler');
 
+  const handler = args[ args.length - 1 ];
   const types = args.slice(0, args.length - 1);
-  const handler = args[ types.length ];
 
   if (typeof handler !== 'function')
     throw new Error('Handler should be a function');
