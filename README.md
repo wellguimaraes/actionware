@@ -11,7 +11,7 @@
 - **busy status** for every async action (yep, no extra code!)
 
 <small>**¹** With Actionware, **actions** have a different meaning: they're just functions which execution generate events. 
-See usage section to better understand.</small>
+See [usage](#usage) section to better understand.</small>
 
 ## Setup
 
