@@ -9,6 +9,7 @@
 - **actions** dispatch their result automatically
 - **error status** for every action with no extra code
 - **busy status** for every async action (yep, no extra code!)
+- **cancellable** actions
 
 <small>**¹** With Actionware, **actions** have a different meaning: they're just functions which execution generate events. 
 See [usage](#usage) section to better understand.</small>
@@ -66,6 +67,51 @@ import { call } from 'actionware';
 call(loadUsers, arg1, arg2, argN);
 ```
 
+#### Cancel an action execution
+```js
+import { call } from 'actionware';
+
+const actionCall = call(loadUsers, arg1, arg2, argN);
+
+actionCall.cancel()
+```
+
+To cancel inner calls or other async executions, use `setExtra` inside an async action 
+to keep information needed and use them on a cancellation listener:
+```js
+import { call, onCancel} from 'actionware';
+import api from './path/to/api';
+
+// Don't use arrow functions here, 
+// otherwise a context value can't be set
+export async function someAction() {
+  const apiCall = api.get('/some/endpoint')
+  const anotherActionCall = call(anotherAction, 'someParam')
+  
+  this.setExtra({ apiCall })
+  this.setExtra({ anotherActionCall }) // you can call it multiple times
+    
+  const apiResponse = await apiCall
+  const anotherResponse = await anotherActionCall
+  
+  // ...
+  
+  return apiResponse.data
+}
+
+export async function anotherAction() {
+  // ...
+}
+
+onCancel(someAction, ({ extras }) => {
+  // Check if the action execution is still cancellable
+  if (extras.anotherActionCall.canBeCancelled)
+    extras.anotherActionCall.cancel()
+    
+  // Cancel the api call...
+})
+```
+
 #### Reducers:
 ```js
 import { createReducer } from 'actionware';
@@ -85,17 +131,22 @@ export default createReducer(initialState)
     (state, payload) => { /* return new state */ })
   
   // Bind multiple actions to the same handler    
-  .on(someAction, anotherAction,
+  .on(
+    someAction, 
+    anotherAction,
     (state, payload) => { /* return new state */ })
   
-  // Actionware handles errors and busy statuses,
+  // Actionware handles errors, cancellation and 'before' events,
   // but if you need to do something else
   
   .onError(persistUser, 
     (state, error, ...args) => { /* return new state */ })
     
-  .onBusy(loadUsers, 
-    (state, isBusy) => { /* return new state */ });
+  .onCancel(loadUsers, 
+    (state, extras, ...args) => { /* return new state */ })
+  
+  .before(loadUsers, 
+    (state, ...args) => { /* return new state */ });
 ```
 
 #### Busy and failure statuses for all your actions:
@@ -111,22 +162,27 @@ getError(loadUsers);
 #### Use listeners to manage side effects:
 Note that busy listeners are called when busy status changes. 
 ```js
-import { addSuccessListener, addErrorListener, addBusyListener } from 'actionware';
+import { onSuccess, onError, onCancel, before, beforeAll } from 'actionware';
 import { createUser } from 'path/to/actions';
 
 // global success listener
-addSuccessListener((action, payload, store) => eventTracker.register(action.name));
+onSuccess(({ action, args, payload, store }) => eventTracker.register(action.name));
 
 // per action success listener
-addSuccessListener(createUser, (user, store) => history.push(`/users/${user.id}`));
+onSuccess(createUser, ({ args, payload, store }) => history.push(`/users/${user.id}`));
 
 // error listeners
-addErrorListener((action, error, ...args) => { /* ... */ });
-addErrorListener(createUser, (error, ...args) => { /* ... */ });
+onError(({ action, args, error }) => { /* ... */ });
+onError(createUser, ({ args, error }) => { /* ... */ });
 
-// busy listeners
-addBusyListener((action, isBusy, store) => { /* ... */ });
-addBusyListener(createUser, (isBusy, store) => { /* ... */ });
+// cancellation listeners
+onCancel(({ action, args, extras }) => { /* ... */ });
+onCancel(createUser, ({ args, extras }) => { /* ... */ });
+
+// before listeners 
+// NOTE: 'beforeAll' is just an alias for 'before'
+beforeAll(({ action, args, store}) => { /* ... */ });
+before(createUser, ({ args, store }) => { /* ... */ });
 ```
 
 #### Interaction-dependent flows
@@ -257,14 +313,14 @@ describe('usersReducer', () => {
 #### Listeners
 
 ###### Global
-- **addSuccessListener**(listener: (action, payload, store) => void)
-- **addErrorListener**(listener: (action, error, ...args) => void)
-- **addBusyListener**(listener: (action, isBusy, store) => void)
+- **onSuccess**(listener: ({ action, payload, args, store }) => void)
+- **onError**(listener: ({ action, error, args, store }) => void)
+- **beforeAll**(listener: ({ action, args, store}) => void)
 
 ###### Per action
-- **addSuccessListener**(action: Function, listener: (payload, store) => void)
-- **addErrorListener**(action: Function, listener: (error, ...args) => void)
-- **addBusyListener**(action: Function, listener: (isBusy, store) => void)
+- **onSuccess**(action: Function, listener: ({ payload, args, store }) => void)
+- **onError**(action: Function, listener: ({ error, args, store }) => void)
+- **before**(action: Function, listener: ({ args, store }) => void)
 
 #### Test helpers
 - **mockCallWith**(fakeCall: Function)

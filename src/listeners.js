@@ -1,53 +1,79 @@
-import { busyType } from './createAction';
-import { errorType } from './createAction';
-import { successType } from './createAction';
+import { busyType, cancellationType, errorType, successType } from './createAction'
+import { getStore } from './storeKeeper'
 
-const globalSuccessListeners: Array<Function> = [];
-const globalErrorListeners: Array<Function> = [];
-const globalBusyListeners: Array<Function> = [];
-const individualListeners = {};
+const globalSuccessListeners: Array<Function> = []
+const globalErrorListeners: Array<Function> = []
+const globalBusyListeners: Array<Function> = []
+const globalCancellationListeners: Array<Function> = []
+const individualListeners = {}
 
-function addListener(globalListeners: Array<Function>, typifier: Function, ...args) {
-  switch (args.length) {
-    // global listener
-    case 1:
-      globalListeners.push(args[ 0 ]);
-      break;
+function getListenerAdder(globalListeners: Array<Function>, typifier: Function) {
+  // Args can be either:
+  // 1) action + handler: per action listener
+  // 2) handler: global listener
+  return (...args) => {
 
-    // action listener
-    case 2:
-      const listener = args[ 1 ];
-      const actionType = typifier(args[ 0 ]);
+    switch (args.length) {
+      // global listener
+      case 1:
+        globalListeners.push(args[ 0 ])
+        break
 
-      if (!individualListeners.hasOwnProperty(actionType))
-        individualListeners[ actionType ] = [ listener ];
-      else
-        individualListeners[ actionType ].push(listener);
+      // action listener
+      case 2:
+        const listener = args[ 1 ]
+        const actionType = typifier(args[ 0 ])
 
-      break;
+        if (!individualListeners.hasOwnProperty(actionType))
+          individualListeners[ actionType ] = [ listener ]
+        else
+          individualListeners[ actionType ].push(listener)
 
-    default:
-      // Invalid arguments
-      throw new Error('Invalid number of arguments');
+        break
+
+      default:
+        // Invalid arguments
+        throw new Error('Invalid number of arguments for listener')
+    }
+
+    // Make it possible to chain listeners setup
+    //
+    //  actionware
+    //    .onSuccess(...)
+    //    .onCancel(...)
+    //    .onError(...)
+    //    .before(...)
+    //
+    return {
+      onSuccess,
+      onCancel,
+      onError,
+      before
+    }
   }
 }
 
-function notifyListeners(globalListeners: Array<Function>, typifier: Function, action, payload, args: Array<any>) {
-  const actionType = typifier(action);
+function getListenersNotifier(globalListeners: Array<Function>, typifier: Function) {
+  return ({ action, payload, args, error, extras }) => {
+    const store = getStore()
+    const actionType = typifier(action)
 
-  // Notify global listeners
-  globalListeners.forEach(fn => fn.apply(null, [ action, payload, ...args ]));
+    // Notify global listeners
+    globalListeners.forEach(fn => fn.call(null, { action, payload, args, error, store, extras }))
 
-  // Notify individual listeners
-  if (individualListeners.hasOwnProperty(actionType)) {
-    individualListeners[ actionType ].forEach(fn => fn.apply(null, [ payload, ...args ]));
+    // Notify individual listeners
+    if (individualListeners.hasOwnProperty(actionType)) {
+      individualListeners[ actionType ].forEach(fn => fn.call(null, { action, payload, args, error, store, extras }))
+    }
   }
 }
 
-export const addSuccessListener = addListener.bind(null, globalSuccessListeners, successType);
-export const addBusyListener = addListener.bind(null, globalBusyListeners, busyType);
-export const addErrorListener = addListener.bind(null, globalErrorListeners, errorType);
+export const onSuccess = getListenerAdder(globalSuccessListeners, successType)
+export const before = getListenerAdder(globalBusyListeners, busyType)
+export const onError = getListenerAdder(globalErrorListeners, errorType)
+export const onCancel = getListenerAdder(globalCancellationListeners, cancellationType)
 
-export const notifySuccessListeners = notifyListeners.bind(null, globalSuccessListeners, successType);
-export const notifyBusyListeners = notifyListeners.bind(null, globalBusyListeners, busyType);
-export const notifyErrorListeners = notifyListeners.bind(null, globalErrorListeners, errorType);
+export const notifySuccessListeners = getListenersNotifier(globalSuccessListeners, successType)
+export const notifyBusynessListeners = getListenersNotifier(globalBusyListeners, busyType)
+export const notifyErrorListeners = getListenersNotifier(globalErrorListeners, errorType)
+export const notifyCancellationListeners = getListenersNotifier(globalCancellationListeners, cancellationType)

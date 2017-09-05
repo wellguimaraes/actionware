@@ -21,6 +21,7 @@ export type TrackedAction = {
   _successType: string;
   _errorType: string;
   _busyType: string;
+  _cancellationType: string;
 }
 
 export type ActionData = {
@@ -32,7 +33,7 @@ export type ActionData = {
 export type Reducer = {
   on(...args: Array<string | Function>): Reducer;
   onError(...args: Array<string | Function>): Reducer;
-  onBusy(...args: Array<string | Function>): Reducer;
+  before(...args: Array<string | Function>): Reducer;
 }
 
 export type Store = {

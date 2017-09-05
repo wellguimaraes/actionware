@@ -1,14 +1,14 @@
-import createAction from './createAction';
+import createAction from './createAction'
 
-export default function(actions) {
+export default function (actions) {
   if (typeof actions !== 'object')
-    throw new Error('actions argument should be an object');
+    throw new Error('actions argument should be an object')
 
-  const createdActions = {};
+  const createdActions = {}
 
   Object.keys(actions).forEach(actionName => {
-    createdActions[actionName] = createAction(actions[actionName]);
-  });
+    createdActions[ actionName ] = createAction(actions[ actionName ])
+  })
 
-  return createdActions;
+  return createdActions
 }
