@@ -1,8 +1,8 @@
 import React from 'react'
 import jsdom from 'mocha-jsdom'
+import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
 import { withActions } from '../src/withActions'
-import { Provider } from 'react-redux'
 import { getStore, setStore } from '../src/storeKeeper'
 import { call } from '../src/call'
 

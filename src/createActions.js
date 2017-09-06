@@ -1,14 +1,13 @@
-import createAction from './createAction'
+import { call } from './call'
 
 export default function (actions) {
   if (typeof actions !== 'object')
     throw new Error('actions argument should be an object')
 
-  const createdActions = {}
-
-  Object.keys(actions).forEach(actionName => {
-    createdActions[ actionName ] = createAction(actions[ actionName ])
-  })
-
-  return createdActions
+  return Object
+    .keys(actions)
+    .reduce((acc, actionName) => {
+      acc[ actionName ] = call.bind(null, actions[ actionName ])
+      return acc
+    }, {})
 }
