@@ -326,7 +326,7 @@ describe('usersReducer', () => {
 ## API
 
 #### Setup  
-- **setStore**(store: object): void
+- **setup**({ store, defaultPrefix?, errorSuffix?, busySuffix?, cancelSuffix? }): void
 
 #### Most used
 - **withActions**(actions: object): Function(wrappedComponent: Component)
