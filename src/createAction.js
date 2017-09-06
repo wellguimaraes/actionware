@@ -1,10 +1,10 @@
 import getActionName from './getActionName'
 import { Action, Store, TrackedAction } from './types'
-import { BUSY_TYPE_SUFFIX, CANCELLATION_TYPE_SUFFIX, ERROR_TYPE_SUFFIX, NAME_PREFIX } from './constants'
-import { getStore } from './storeKeeper'
 import { rejectWaiters, resolveWaiters } from './next'
+import { getBusySuffix, getCancelSuffix, getDefaultPrefix, getErrorSuffix, getStore } from './config'
+import { BUSY_TYPE, CANCEL_TYPE, ERROR_TYPE, SUCCESS_TYPE } from './constants'
 import {
-  notifyBusynessListeners,
+  notifyBeforeListeners,
   notifyCancellationListeners,
   notifyErrorListeners,
   notifySuccessListeners
@@ -83,12 +83,12 @@ export default function createAction(action: Action): TrackedAction {
     }
   }
 
-  const actionName = getActionName(NAME_PREFIX, action.name, action)
+  const actionName = getActionName(action._prefix || getDefaultPrefix(), action.name, action)
 
   trackedAction._successType = actionName
-  trackedAction._busyType = actionName + BUSY_TYPE_SUFFIX
-  trackedAction._errorType = actionName + ERROR_TYPE_SUFFIX
-  trackedAction._cancellationType = actionName + CANCELLATION_TYPE_SUFFIX
+  trackedAction._busyType = actionName + getBusySuffix()
+  trackedAction._errorType = actionName + getErrorSuffix()
+  trackedAction._cancellationType = actionName + getCancelSuffix()
 
   action._trackedAction = trackedAction
 
@@ -99,7 +99,8 @@ export function handleActionSuccess(action: Action, payload, args) {
   const store: Store = getStore()
 
   store.dispatch({
-    trackedAction: action._trackedAction,
+    _actionwareType: SUCCESS_TYPE,
+    _trackedAction: action._trackedAction,
     type: action._trackedAction._successType,
     payload
   })
@@ -114,20 +115,22 @@ export function handleActionBusy(action: Action, args) {
   const store: Store = getStore()
 
   store.dispatch({
-    trackedAction: action._trackedAction,
+    _actionwareType: BUSY_TYPE,
+    _trackedAction: action._trackedAction,
     type: action._trackedAction._busyType,
     payload: null, // Payload prop must be set
     args
   })
 
-  notifyBusynessListeners({ action, args })
+  notifyBeforeListeners({ action, args })
 }
 
 export function handleActionError(action: Action, args, error: Error) {
   const store: Store = getStore()
 
   store.dispatch({
-    trackedAction: action._trackedAction,
+    _actionwareType: ERROR_TYPE,
+    _trackedAction: action._trackedAction,
     type: action._trackedAction._errorType,
     payload: error,
     args
@@ -143,7 +146,8 @@ export function handleActionCancellation(action: Action, args, extras) {
   const store: Store = getStore()
 
   store.dispatch({
-    trackedAction: action._trackedAction,
+    _actionwareType: CANCEL_TYPE,
+    _trackedAction: action._trackedAction,
     type: action._trackedAction._cancellationType,
     payload: extras,
     args

@@ -1,5 +1,5 @@
 import React from 'react'
-import createActions from './createActions'
+import { createActions } from './createActions'
 
 function getDisplayName(wrappedComponent) {
   const wrapperName = wrappedComponent.displayName || wrappedComponent.name || 'Component'

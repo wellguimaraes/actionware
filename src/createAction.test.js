@@ -1,5 +1,5 @@
-import createAction from '../src/createAction'
-import { getStore, setStore } from '../src/storeKeeper'
+import createAction from './createAction'
+import { getStore, setup } from './config'
 
 describe('createAction', () => {
   it('should throw an error if given action is not a function', () => {
@@ -48,7 +48,7 @@ describe('createAction', () => {
       const action = spy()
       const dispatch = spy()
       const trackedAction = createAction(action)
-      setStore({ dispatch, getState: spy() })
+      setup({ store: { dispatch, getState: spy() } })
 
       trackedAction(1, 'a', 3)
 
@@ -61,7 +61,7 @@ describe('createAction', () => {
       const dispatch = spy()
       const trackedAction = createAction(action)
 
-      setStore({ dispatch, getState: spy() })
+      setup({ store: { dispatch, getState: spy() } })
 
       trackedAction(1, 'a', 3)
 
@@ -74,7 +74,8 @@ describe('createAction', () => {
       const action = async () => Promise.resolve(23)
       const dispatch = spy()
       const trackedAction = createAction(action)
-      setStore({ dispatch, getState: spy() })
+
+      setup({ store: { dispatch, getState: spy() } })
 
       const result = await trackedAction(1, 'a', 3)
 

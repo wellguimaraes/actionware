@@ -1,7 +1,7 @@
-import createAction from '../src/createAction'
-import { actionwareReducer } from '../src/actionwareReducer'
-import { BUSY_TYPE_SUFFIX, ERROR_TYPE_SUFFIX } from '../src/constants'
-import { getError, isBusy } from '../src/stateKeeper'
+import createAction from './createAction'
+import { actionwareReducer } from './actionwareReducer'
+import { getError, isBusy } from './stateKeeper'
+import { BUSY_TYPE, ERROR_TYPE } from './constants'
 
 describe('ActionwareReducer', () => {
   const wrappedAction = function () {}
@@ -22,7 +22,7 @@ describe('ActionwareReducer', () => {
   })
 
   describe('on error event', () => {
-    const action = { type: ERROR_TYPE_SUFFIX, payload: new Error('err'), trackedAction }
+    const action = { _actionwareType: ERROR_TYPE, payload: new Error('err'), trackedAction }
     const newState = actionwareReducer({}, action)
 
     it('should set error state to the given payload', () => {
@@ -35,7 +35,7 @@ describe('ActionwareReducer', () => {
   })
 
   describe('on busy event', () => {
-    const action = { type: BUSY_TYPE_SUFFIX, trackedAction }
+    const action = { _actionwareType: BUSY_TYPE, trackedAction }
     const newState = actionwareReducer({}, action)
 
     it('should set error state to null', () => {

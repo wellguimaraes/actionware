@@ -1,9 +1,9 @@
 import { busyType, cancellationType, errorType, successType } from './createAction'
-import { getStore } from './storeKeeper'
+import { getStore } from './config'
 
 const globalSuccessListeners: Array<Function> = []
 const globalErrorListeners: Array<Function> = []
-const globalBusyListeners: Array<Function> = []
+const globalBeforeListeners: Array<Function> = []
 const globalCancellationListeners: Array<Function> = []
 const individualListeners = {}
 
@@ -69,11 +69,11 @@ function getListenersNotifier(globalListeners: Array<Function>, typifier: Functi
 }
 
 export const onSuccess = getListenerAdder(globalSuccessListeners, successType)
-export const before = getListenerAdder(globalBusyListeners, busyType)
+export const before = getListenerAdder(globalBeforeListeners, busyType)
 export const onError = getListenerAdder(globalErrorListeners, errorType)
 export const onCancel = getListenerAdder(globalCancellationListeners, cancellationType)
 
 export const notifySuccessListeners = getListenersNotifier(globalSuccessListeners, successType)
-export const notifyBusynessListeners = getListenersNotifier(globalBusyListeners, busyType)
+export const notifyBeforeListeners = getListenersNotifier(globalBeforeListeners, busyType)
 export const notifyErrorListeners = getListenersNotifier(globalErrorListeners, errorType)
 export const notifyCancellationListeners = getListenersNotifier(globalCancellationListeners, cancellationType)

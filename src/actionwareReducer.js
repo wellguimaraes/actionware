@@ -1,34 +1,41 @@
 import { saveState } from './stateKeeper'
-import { BUSY_TYPE_SUFFIX, ERROR_TYPE_SUFFIX } from './constants'
 import { TrackedAction } from './types'
+import { BUSY_TYPE, ERROR_TYPE } from './constants'
 
-export function actionwareReducer(state = {}, action) {
-  const type: string = action.type
-  const payload: any = action.payload
-  const trackedAction: TrackedAction = action.trackedAction
+export function actionwareReducer(state = {}, reduxAction) {
+  const payload: any = reduxAction.payload
+  const actionwareType: string = reduxAction._actionwareType
+  const trackedAction: TrackedAction = reduxAction._trackedAction
 
   if (!trackedAction) return state
 
   let nextState = state
 
-  if (type.endsWith(ERROR_TYPE_SUFFIX))
-    nextState = {
-      ...state,
-      [trackedAction._errorType]: payload,
-      [trackedAction._busyType]: false
-    }
-  else if (type.endsWith(BUSY_TYPE_SUFFIX))
-    nextState = {
-      ...state,
-      [trackedAction._errorType]: null,
-      [trackedAction._busyType]: true
-    }
-  else
-    nextState = {
-      ...state,
-      [trackedAction._errorType]: null,
-      [trackedAction._busyType]: false
-    }
+  switch (actionwareType) {
+    case ERROR_TYPE:
+      nextState = {
+        ...state,
+        [trackedAction._errorType]: payload,
+        [trackedAction._busyType]: false
+      }
+      break
+
+    case BUSY_TYPE:
+      nextState = {
+        ...state,
+        [trackedAction._errorType]: null,
+        [trackedAction._busyType]: true
+      }
+      break
+
+    default:
+      nextState = {
+        ...state,
+        [trackedAction._errorType]: null,
+        [trackedAction._busyType]: false
+      }
+      break
+  }
 
   saveState(nextState)
 

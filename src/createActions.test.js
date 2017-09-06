@@ -1,4 +1,4 @@
-import createActions from '../src/createActions'
+import { createActions } from '../src'
 import { expect } from 'chai'
 
 describe('createActions', () => {

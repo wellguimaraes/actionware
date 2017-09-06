@@ -12,6 +12,7 @@ export type Action = {
   onSuccess: (payload: any, ...args: any[]) => void;
   _waiters: Array<PromiseHandler>;
   _trackedAction: TrackedAction;
+  _prefix: string;
 }
 
 export type TrackedAction = {

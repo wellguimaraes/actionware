@@ -1,9 +1,10 @@
-export { setStore } from './storeKeeper'
+export { setup, setStore } from './config'
 
 export { actionwareReducer } from './actionwareReducer'
 export { createReducer } from './createReducer'
 
 export { withActions } from './withActions'
+export createActions from './createActions'
 
 export { getError, isBusy } from './stateKeeper'
 

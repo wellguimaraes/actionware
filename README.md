@@ -20,11 +20,18 @@ See [usage](#usage) section to better understand.</small>
 - Yarn: `yarn add actionware`
 - NPM: `npm i actionware --save`
 
-#### After creating your Redux store, let Actionware know your store instance:
+#### After creating your Redux store, let Actionware know your store instance. Optionally you
+can define custom action types prefix and suffixes:
 ```js
-import { setStore } from 'actionware';
+import * as actionware from 'actionware';
 
-setStore(myAppStore);
+actionware.setup({
+  store,
+  defaultPrefix, // default: 'actionware:'
+  errorSuffix,   // default: ':error'
+  cancelSuffix,  // default: ':cancel'
+  busySuffix     // default: ':busy'
+});
 ```
 
 #### Add actionware reducer to your root reducer:
@@ -220,6 +227,16 @@ import { connect } from 'react-redux';
 import { withActions, isBusy, getError } from 'actionware';
 import { loadUsers } from 'path/to/actions';
 
+const actions = { loadUsers };
+
+const mapStateToProps = ({ company }) => ({
+  users   : company.users,
+  loading : isBusy(loadUsers),
+  error   : getError(loadUsers)
+});
+
+@connect(mapStateToProps)
+@withActions(actions)
 class MyConnectedComponent extends Component {
   componentDidMount() {
     this.props.loadUsers();    
@@ -233,24 +250,30 @@ class MyConnectedComponent extends Component {
     
     return (
       <div>
-        {users.map(it => <User key={it.id} {...it} />)}
+        { users.map(it => <User key={it.id} {...it} />) }
       </div>
     );
   }
 }
 
-const actions = { loadUsers };
-
-const mapStateToProps = ({ company }) => ({
-  users   : company.users,
-  loading : isBusy(loadUsers),
-  error   : getError(loadUsers)
-});
-
-export default connect(mapStateToProps)(
-  withActions(actions)(MyConnectedComponent)
-);
+export default MyConnectedComponent
 ```
+In case your prefer not injecting actions as props into your component, you can use `createActions` this way:
+```js
+
+const actions = createActions('optionalPrefix:', {
+  someAction,
+  anotherAction
+})
+
+const MyComponent = () => (
+  <div>
+    <button onClick={ actions.someAction }></button>
+  </div>
+)
+
+```
+
 
 ## Testing
 

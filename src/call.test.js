@@ -1,5 +1,5 @@
-import { call, mockCallWith } from '../src/call'
-import { getStore } from '../src/storeKeeper'
+import { call, mockCallWith } from './call'
+import { getStore } from './config'
 
 describe('call', () => {
   afterEach(() => {

@@ -1,4 +1,4 @@
-import getActionName from '../src/getActionName'
+import getActionName from './getActionName'
 
 describe('getActionName', () => {
   it('should return action name with prefix', () => {

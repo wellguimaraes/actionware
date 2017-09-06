@@ -2,13 +2,13 @@ import React from 'react'
 import jsdom from 'mocha-jsdom'
 import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
-import { withActions } from '../src/withActions'
-import { getStore, setStore } from '../src/storeKeeper'
-import { call } from '../src/call'
+import { withActions } from './withActions'
+import { getStore, setup } from './config'
+import { call } from './call'
 
 const store = { dispatch: spy(), getState: spy(), subscribe: spy() }
 
-setStore(store)
+setup({ store })
 
 describe('withActions', () => {
   jsdom()

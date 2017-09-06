@@ -1,5 +1,5 @@
-import { createReducer } from '../src/createReducer'
-import { successType } from '../src/createAction'
+import { createReducer } from './createReducer'
+import { successType } from './createAction'
 
 describe('createReducer', () => {
   it('should return a function', () => {

@@ -1,10 +1,10 @@
 {
   "name": "actionware",
-  "version": "8.0.0",
+  "version": "8.1.0",
   "description": "Use Redux with much less boilerplate and get busy and error states for every action with no extra code.",
   "main": "./lib/index.js",
   "scripts": {
-    "test": "cross-env NODE_PATH=./src mocha ./tests/**/**/*.test.js --require before-tests.js --require babel-polyfill --compilers js:babel-register",
+    "test": "cross-env NODE_PATH=./src mocha ./src/**/**/*.test.js --require before-tests.js --require babel-polyfill --compilers js:babel-register",
     "test:watch": "npm run test -- --watch",
     "build": "babel src -d lib",
     "prepublish": "npm run test&&npm run build"
