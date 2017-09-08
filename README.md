@@ -330,6 +330,7 @@ describe('usersReducer', () => {
 
 #### Most used
 - **withActions**(actions: object): Function(wrappedComponent: Component)
+- **createActions**(actions: object): object
 - **isBusy**(action: Function): bool
 - **getError**(action: Function): object
 - **call**(action: Function, ...args)
