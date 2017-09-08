@@ -1,10 +1,10 @@
 import { Store } from './types'
 
 let _store: Store = null
-let _defaultPrefix: string
-let _errorSuffix: string
-let _busySuffix: string
-let _cancelSuffix: string
+let _defaultPrefix: string = 'actionware:'
+let _errorSuffix: string = ':error'
+let _busySuffix: string = ':busy'
+let _cancelSuffix: string = ':cancel'
 
 export function setup({ store, defaultPrefix = 'actionware:', errorSuffix = ':error', busySuffix = ':busy', cancelSuffix = ':cancel' }) {
   _store = store

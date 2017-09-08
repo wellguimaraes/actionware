@@ -4,7 +4,7 @@ export { actionwareReducer } from './actionwareReducer'
 export { createReducer } from './createReducer'
 
 export { withActions } from './withActions'
-export createActions from './createActions'
+export { createActions } from './createActions'
 
 export { getError, isBusy } from './stateKeeper'
 

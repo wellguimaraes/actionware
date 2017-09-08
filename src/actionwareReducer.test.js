@@ -14,7 +14,7 @@ describe('ActionwareReducer', () => {
   })
 
   it('should save new state', () => {
-    const action = { type: 'success', trackedAction }
+    const action = { type: 'success', _trackedAction: trackedAction }
     actionwareReducer({}, action)
 
     expect(getError(wrappedAction)).to.equal(null)
@@ -22,7 +22,7 @@ describe('ActionwareReducer', () => {
   })
 
   describe('on error event', () => {
-    const action = { _actionwareType: ERROR_TYPE, payload: new Error('err'), trackedAction }
+    const action = { _actionwareType: ERROR_TYPE, payload: new Error('err'), _trackedAction: trackedAction }
     const newState = actionwareReducer({}, action)
 
     it('should set error state to the given payload', () => {
@@ -35,7 +35,7 @@ describe('ActionwareReducer', () => {
   })
 
   describe('on busy event', () => {
-    const action = { _actionwareType: BUSY_TYPE, trackedAction }
+    const action = { _actionwareType: BUSY_TYPE, _trackedAction: trackedAction }
     const newState = actionwareReducer({}, action)
 
     it('should set error state to null', () => {
@@ -48,7 +48,7 @@ describe('ActionwareReducer', () => {
   })
 
   describe('on success event', () => {
-    const action = { type: 'success', trackedAction }
+    const action = { type: 'success', _trackedAction: trackedAction }
     const newState = actionwareReducer({}, action)
 
     it('should set error state to null', () => {
