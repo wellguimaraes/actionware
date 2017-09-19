@@ -1,7 +1,8 @@
-# <img src='https://raw.githubusercontent.com/wellguimaraes/actionware/master/assets/logo.png' height='100'>
+# ![Actionware](assets/logo.png)
 
 [![Build Status](https://travis-ci.org/wellguimaraes/actionware.svg?branch=master)](https://travis-ci.org/wellguimaraes/actionware)
 [![Code Climate](https://codeclimate.com/github/wellguimaraes/actionware/badges/gpa.svg)](https://codeclimate.com/github/wellguimaraes/actionware)
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/actionwarejs)
 
 [Redux](http://redux.js.org/) with less boilerplate, actions statuses and controlled side-effects in a single shot. 
 
@@ -13,6 +14,9 @@
 
 <small>**¹** With Actionware, **actions** have a different meaning: they're just functions which execution generate events. 
 See [usage](#usage) section to better understand.</small>
+
+###### Extra power
+Wanna have state selectors/getters in a decent way? Use it combined with [Stateware](https://github.com/wellguimaraes/stateware).
 
 ## Setup
 
