@@ -52,14 +52,13 @@ export default function createAction(action: Action): TrackedAction {
 
         cancellableResponse.cancel = () => {
           if (!cancellable)
-            throw new Error(
-              'Action is not executing anymore, therefore can\'t be cancelled.\n' +
-              'Check \'canBeCancelled\' prop to verify whether an action ' +
-              'call can be cancelled or not.'
-            )
+            console.warn(`
+              Action (${actionName}) is not executing anymore, therefore can't be cancelled.
+              Check \'canBeCancelled\' prop to verify whether an action call can be cancelled or not.`)
 
           cancelled = true
           cancellable = false
+
           handleActionCancellation(action, args, extras)
 
           return { args, extras }
