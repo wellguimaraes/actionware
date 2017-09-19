@@ -16,7 +16,7 @@
 See [usage](#usage) section to better understand.</small>
 
 ###### Extra power
-Wanna have state selectors/getters in a decent way? Use it combined with [Stateware](https://github.com/wellguimaraes/stateware).
+Wanna have state selectors/getters in a decent way? Use it combined with **[Stateware](https://github.com/wellguimaraes/stateware)** lib.
 
 ## Setup
 
