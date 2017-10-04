@@ -260,7 +260,7 @@ export default MyConnectedComponent
 ```
 
 #### Without injecting actions as props
-In case your prefer not injecting actions as props into your component, you can use `createActions` this way:
+In case you prefer not injecting actions as props into your component, you can use `createActions` this way:
 ```js
 import { createActions } from 'actionware'
 
