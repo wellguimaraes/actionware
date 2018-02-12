@@ -5,6 +5,7 @@ export { createReducer } from './createReducer'
 
 export { withActions } from './withActions'
 export { createActions } from './createActions'
+export { clearError } from './clearError'
 
 export { getError, isBusy } from './stateKeeper'
 

@@ -1,8 +1,6 @@
 # ![Actionware](assets/logo.png)
 
 [![Build Status](https://travis-ci.org/wellguimaraes/actionware.svg?branch=master)](https://travis-ci.org/wellguimaraes/actionware)
-[![Code Climate](https://codeclimate.com/github/wellguimaraes/actionware/badges/gpa.svg)](https://codeclimate.com/github/wellguimaraes/actionware)
-[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/actionwarejs)
 
 [Redux](http://redux.js.org/) with less boilerplate, actions statuses and controlled side-effects in a single shot. 
 
@@ -121,6 +119,17 @@ onCancel(someAction, ({ extras }) => {
     
   // Cancel the api call...
 })
+```
+
+#### Clear action error
+```js
+import { clearError } from 'actionware'
+
+export async function someAction() {
+  // ...
+}
+
+clearError(someAction)
 ```
 
 #### Reducers:
@@ -337,6 +346,7 @@ describe('usersReducer', () => {
 - **createActions**(actions: object): object
 - **isBusy**(action: Function): bool
 - **getError**(action: Function): object
+- **clearError**(action: Function): void
 - **call**(action: Function, ...args)
 - **next**(action: Function)
 - **createReducer**(initialState: object, handlers: []): Function

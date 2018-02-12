@@ -8,7 +8,7 @@ import { getDefaultPrefix } from './config'
  * @param actions
  * @returns {*}
  */
-export function createActions(prefix: string | object, actions) {
+export function createActions(prefix: string | any, actions) {
   if (prefix && !actions) {
     actions = prefix
     prefix = getDefaultPrefix()
