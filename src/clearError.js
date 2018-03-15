@@ -5,7 +5,7 @@ import createAction from './createAction'
 
 export function clearError(action) {
   const store: Store = getStore()
-  const trackedAction = createAction(action)._trackedAction
+  const trackedAction = createAction(action)
 
   store.dispatch({
     _actionwareType: ERROR_TYPE,
